@@ -51,7 +51,7 @@ class _EditTextFormFieldState extends State<EditTextFormField> {
           ),
         ),
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
       ),
     );
   }

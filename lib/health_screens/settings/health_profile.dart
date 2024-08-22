@@ -83,7 +83,7 @@ class HealthProfile extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 backgroundColor:
-                                    Color.fromARGB(255, 244, 244, 255),
+                                    const Color.fromARGB(255, 244, 244, 255),
                                 radius: 65,
                                 backgroundImage: profileImage.isNotEmpty
                                     ? NetworkImage(profileImage)
@@ -109,7 +109,7 @@ class HealthProfile extends StatelessWidget {
                         fontSize: 16,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Text(
@@ -119,7 +119,7 @@ class HealthProfile extends StatelessWidget {
                         fontSize: 15,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     ElevatedButton(
@@ -131,11 +131,11 @@ class HealthProfile extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HealthEditProfile(),
+                            builder: (context) => const HealthEditProfile(),
                           ),
                         );
                       },
-                      child: Text("Edit Profile"),
+                      child: const Text("Edit Profile"),
                     ),
                     Container(
                       //height: ,
@@ -144,26 +144,25 @@ class HealthProfile extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
+                          const Padding(
+                            padding: EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 10),
-                            child: const Divider(
+                            child: Divider(
                               color: Color.fromARGB(255, 216, 216, 255),
                             ),
                           ),
                           Container(
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 5),
+                            padding: const EdgeInsets.only(left: 20, right: 20),
                             width: double.infinity,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
                                   alignment: Alignment.centerRight,
-                                  child: Text(
+                                  child: const Text(
                                     "Personal Info",
                                     style: TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                       color: Color(0xFF3E4D99),
                                     ),
@@ -173,6 +172,7 @@ class HealthProfile extends StatelessWidget {
                                 const SizedBox(
                                   height: 10,
                                 ),
+                                _buildInfoRow("Full Name", fullname),
                                 _buildInfoRow("Health Code", hcode),
                                 _buildInfoRow("Gender", gender),
                                 _buildInfoRow("Email", email),
@@ -236,10 +236,10 @@ class HealthProfile extends StatelessWidget {
           ),
           alignment: Alignment.centerLeft,
           width: double.infinity,
-          height: 65,
+          height: 55,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
-            color: Color.fromARGB(255, 244, 244, 255),
+            color: const Color.fromARGB(255, 244, 244, 255),
           ),
           child: Text(
             value,

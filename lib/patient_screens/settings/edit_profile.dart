@@ -338,7 +338,7 @@ class _EditPatientProfileState extends State<EditPatientProfile> {
                       fillColor: Color.fromARGB(255, 244, 244, 255),
                       filled: true,
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 20),
+                          horizontal: 20, vertical: 14),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50.0),
                         borderSide: BorderSide.none,

@@ -199,11 +199,8 @@ class PatientProfilePage extends StatelessWidget {
                       color: Color.fromARGB(255, 216, 216, 255),
                     ),
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
                   Container(
-                    padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
+                    padding: const EdgeInsets.only(left: 20, right: 20),
                     width: double.infinity,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,7 +210,7 @@ class PatientProfilePage extends StatelessWidget {
                           child: Text(
                             "Personal Info",
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Color(0xFF3E4D99),
                             ),
@@ -223,6 +220,7 @@ class PatientProfilePage extends StatelessWidget {
                         const SizedBox(
                           height: 10,
                         ),
+                        _buildInfoRow("Full Name", fullname),
                         _buildInfoRow("Health Code", hcode),
                         _buildInfoRow("Gender", gender),
                         _buildInfoRow("Email", email),
@@ -282,7 +280,7 @@ class PatientProfilePage extends StatelessWidget {
           ),
           alignment: Alignment.centerLeft,
           width: double.infinity,
-          height: 65,
+          height: 55,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
             color: Color.fromARGB(255, 244, 244, 255),
