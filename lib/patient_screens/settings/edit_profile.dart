@@ -1,6 +1,7 @@
 import 'package:abtms/controllers/controllers.dart';
 import 'package:abtms/patient_login_signup/auth_service.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -199,8 +200,7 @@ class _EditPatientProfileState extends State<EditPatientProfile> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF3E4D99),
-        foregroundColor: Colors.white,
+        foregroundColor: const Color(0xFF3E4D99),
         title: const Text(
           'Edit Profile',
           style: TextStyle(fontSize: 17),
@@ -221,7 +221,7 @@ class _EditPatientProfileState extends State<EditPatientProfile> {
             child: const Text(
               "Done",
               style: TextStyle(
-                  color: Colors.white,
+                  color: const Color(0xFF3E4D99),
                   fontWeight: FontWeight.w600,
                   fontSize: 16),
             ),
@@ -234,56 +234,43 @@ class _EditPatientProfileState extends State<EditPatientProfile> {
             Stack(
               children: [
                 Container(
-                  alignment: Alignment.bottomCenter,
-                  height: 170,
-                  color: const Color(0xFF3E4D99),
-                  child: Container(
-                    height: 80,
-                    color: Colors.white,
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 50,
-                  right: 50,
-                  child: Container(
-                    height: 150,
-                    width: 150,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.white),
-                    child: Center(
-                      child: Stack(
-                        children: [
-                          CircleAvatar(
-                            radius: 70,
-                            backgroundImage: _profileImage != null
-                                ? FileImage(File(_profileImage!.path))
-                                : profileImageUrl.isNotEmpty
-                                    ? NetworkImage(profileImageUrl)
-                                    : null as ImageProvider<Object>?,
-                            child:
-                                _profileImage == null && profileImageUrl.isEmpty
-                                    ? const Icon(
-                                        Icons.person,
-                                        size: 70,
-                                      )
-                                    : null,
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: -5,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: const CircleBorder(),
-                                backgroundColor: const Color(0xFF3E4D99),
-                                foregroundColor: Colors.white,
-                              ),
-                              child: const Icon(Icons.camera_alt),
-                              onPressed: _showImageOptions,
+                  height: 150,
+                  width: 150,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.white),
+                  child: Center(
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Color.fromARGB(255, 244, 244, 255),
+                          radius: 70,
+                          backgroundImage: _profileImage != null
+                              ? FileImage(File(_profileImage!.path))
+                              : profileImageUrl.isNotEmpty
+                                  ? NetworkImage(profileImageUrl)
+                                  : null as ImageProvider<Object>?,
+                          child:
+                              _profileImage == null && profileImageUrl.isEmpty
+                                  ? const Icon(
+                                      EneftyIcons.user_outline,
+                                      size: 70,
+                                    )
+                                  : null,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: -5,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: const CircleBorder(),
+                              backgroundColor: const Color(0xFF3E4D99),
+                              foregroundColor: Colors.white,
                             ),
+                            child: const Icon(Icons.camera_alt),
+                            onPressed: _showImageOptions,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -311,6 +298,7 @@ class _EditPatientProfileState extends State<EditPatientProfile> {
                       style: TextStyle(
                         fontSize: 15,
                         color: Color(0xFF3E4D99),
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
@@ -325,6 +313,7 @@ class _EditPatientProfileState extends State<EditPatientProfile> {
                       style: TextStyle(
                         fontSize: 15,
                         color: Color(0xFF3E4D99),
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
@@ -339,16 +328,20 @@ class _EditPatientProfileState extends State<EditPatientProfile> {
                       style: TextStyle(
                         fontSize: 15,
                         color: Color(0xFF3E4D99),
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                   DropdownButtonFormField<String>(
+                    borderRadius: BorderRadius.circular(50.0),
                     decoration: InputDecoration(
+                      fillColor: Color.fromARGB(255, 244, 244, 255),
+                      filled: true,
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 16),
+                          horizontal: 20, vertical: 20),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(width: 1),
+                        borderRadius: BorderRadius.circular(50.0),
+                        borderSide: BorderSide.none,
                       ),
                     ),
                     value: selectedGender,
@@ -372,6 +365,7 @@ class _EditPatientProfileState extends State<EditPatientProfile> {
                       style: TextStyle(
                         fontSize: 15,
                         color: Color(0xFF3E4D99),
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
@@ -386,6 +380,7 @@ class _EditPatientProfileState extends State<EditPatientProfile> {
                       style: TextStyle(
                         fontSize: 15,
                         color: Color(0xFF3E4D99),
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
@@ -400,6 +395,7 @@ class _EditPatientProfileState extends State<EditPatientProfile> {
                       style: TextStyle(
                         fontSize: 15,
                         color: Color(0xFF3E4D99),
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),

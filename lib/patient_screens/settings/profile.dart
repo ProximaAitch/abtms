@@ -1,5 +1,6 @@
 import 'package:abtms/patient_screens/settings/edit_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enefty_icons/enefty_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -57,8 +58,7 @@ class PatientProfilePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF3E4D99),
-        foregroundColor: Colors.white,
+        foregroundColor: const Color(0xFF3E4D99),
         title: const Text(
           'Profile',
           style: TextStyle(fontSize: 17),
@@ -70,25 +70,18 @@ class PatientProfilePage extends StatelessWidget {
           },
           icon: const Icon(CupertinoIcons.back),
         ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditPatientProfile(),
-                ),
-              );
-            },
-            child: const Text(
-              "Edit",
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16),
-            ),
-          ),
-        ],
+        // actions: [
+        //   TextButton(
+        //     onPressed: () {},
+        //     child: const Text(
+        //       "Edit",
+        //       style: TextStyle(
+        //           color: Color(0xFF3E4D99),
+        //           fontWeight: FontWeight.w600,
+        //           fontSize: 16),
+        //     ),
+        //   ),
+        // ],
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: fetchUserData(),
@@ -129,111 +122,108 @@ class PatientProfilePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Stack(
-                    children: [
-                      Container(
-                        alignment: Alignment.bottomCenter,
-                        height: 150,
-                        color: const Color(0xFF3E4D99),
-                        child: Container(
-                          height: 80,
-                          color: Colors.white,
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        left: 10,
-                        child: Row(
+                  Container(
+                    child: Container(
+                      height: 120,
+                      width: 120,
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.white),
+                      child: Center(
+                        child: Stack(
                           children: [
-                            Container(
-                              height: 120,
-                              width: 120,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle, color: Colors.white),
-                              child: Center(
-                                child: Stack(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 55,
-                                      backgroundImage: profileImage.isNotEmpty
-                                          ? NetworkImage(profileImage)
-                                          : null,
-                                      child: profileImage.isEmpty
-                                          ? const Icon(CupertinoIcons.person,
-                                              size: 50)
-                                          : null,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 2, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: const Color(0xFF3E4D99),
-                                  ),
-                                  child: Text(
-                                    username,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 2, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: const Color(0xFF3E4D99),
-                                  ),
-                                  child: Text(
-                                    hcode,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ],
+                            CircleAvatar(
+                              backgroundColor:
+                                  Color.fromARGB(255, 244, 244, 255),
+                              radius: 65,
+                              backgroundImage: profileImage.isNotEmpty
+                                  ? NetworkImage(profileImage)
+                                  : null,
+                              child: profileImage.isEmpty
+                                  ? const Icon(EneftyIcons.user_outline,
+                                      size: 50)
+                                  : null,
                             ),
                           ],
                         ),
                       ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        username,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF3E4D99),
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        email,
+                        style: const TextStyle(
+                          color: const Color(0xFF3E4D99),
+                          fontSize: 15,
+                        ),
+                      ),
                     ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color(0xFF3E4D99),
+                    ),
+                    onPressed: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditPatientProfile(),
+                        ),
+                      );
+                    },
+                    child: Text("Edit Profile"),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 10),
+                    child: const Divider(
+                      color: Color.fromARGB(255, 216, 216, 255),
+                    ),
                   ),
                   const SizedBox(
                     height: 5,
                   ),
                   Container(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
                     width: double.infinity,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Center(
+                        Container(
+                          alignment: Alignment.centerRight,
                           child: Text(
                             "Personal Info",
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color: Color(0xFF3E4D99),
                             ),
                           ),
                         ),
-                        const Divider(),
+
                         const SizedBox(
                           height: 10,
                         ),
-                        _buildInfoRow("Full Name", fullname),
+                        _buildInfoRow("Health Code", hcode),
                         _buildInfoRow("Gender", gender),
                         _buildInfoRow("Email", email),
                         _buildInfoRow("Mobile No", mobileNo),
@@ -281,18 +271,21 @@ class PatientProfilePage extends StatelessWidget {
             label,
             style: const TextStyle(
               color: Color(0xFF3E4D99),
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
+              fontSize: 15,
             ),
           ),
         ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+          ),
           alignment: Alignment.centerLeft,
           width: double.infinity,
-          height: 55,
+          height: 65,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: const Color(0xFFF3F3F4),
+            borderRadius: BorderRadius.circular(50),
+            color: Color.fromARGB(255, 244, 244, 255),
           ),
           child: Text(
             value,

@@ -1,6 +1,7 @@
-import 'package:abtms/health_screens/health_profile.dart';
+import 'package:abtms/health_screens/settings/health_profile.dart';
 import 'package:abtms/patient_screens/settings/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enefty_icons/enefty_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -36,22 +37,21 @@ class _EditTextFormFieldState extends State<EditTextFormField> {
     return TextFormField(
       controller: widget.controller,
       decoration: InputDecoration(
+        fillColor: Color.fromARGB(255, 244, 244, 255),
+        filled: true,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            width: 1,
-            color: Color.fromARGB(255, 234, 234, 234),
-          ),
+          borderRadius: BorderRadius.circular(50.0),
+          borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(50.0),
           borderSide: const BorderSide(
             width: 1,
             color: Color(0xFF3E4D99),
           ),
         ),
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       ),
     );
   }
@@ -138,7 +138,12 @@ class PatientMonitoringAppbar extends StatelessWidget
               },
               child: const Row(
                 children: [
-                  CircleAvatar(radius: 25),
+                  CircleAvatar(
+                    radius: 25,
+                    child: const Icon(
+                      EneftyIcons.user_outline,
+                    ),
+                  ),
                   SizedBox(width: 3),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,7 +174,12 @@ class PatientMonitoringAppbar extends StatelessWidget
               },
               child: const Row(
                 children: [
-                  CircleAvatar(radius: 25),
+                  CircleAvatar(
+                    radius: 25,
+                    child: const Icon(
+                      EneftyIcons.user_outline,
+                    ),
+                  ),
                   SizedBox(width: 3),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,11 +213,15 @@ class PatientMonitoringAppbar extends StatelessWidget
                 children: [
                   CircleAvatar(
                     radius: 25,
+                    backgroundColor: Color.fromARGB(255, 244, 244, 255),
                     backgroundImage: profileImage.isNotEmpty
                         ? NetworkImage(profileImage)
                         : null,
-                    child:
-                        profileImage.isEmpty ? const Icon(Icons.person) : null,
+                    child: profileImage.isEmpty
+                        ? const Icon(
+                            EneftyIcons.user_outline,
+                          )
+                        : null,
                   ),
                   const SizedBox(width: 10),
                   Column(
@@ -232,7 +246,12 @@ class PatientMonitoringAppbar extends StatelessWidget
           } else {
             return const Row(
               children: [
-                CircleAvatar(radius: 25),
+                CircleAvatar(
+                  radius: 25,
+                  child: const Icon(
+                    EneftyIcons.user_outline,
+                  ),
+                ),
                 SizedBox(width: 3),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -339,7 +358,12 @@ class HealthMonitoringAppbar extends StatelessWidget
               },
               child: const Row(
                 children: [
-                  CircleAvatar(radius: 25),
+                  CircleAvatar(
+                    radius: 25,
+                    child: const Icon(
+                      EneftyIcons.user_outline,
+                    ),
+                  ),
                   SizedBox(width: 3),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -379,8 +403,11 @@ class HealthMonitoringAppbar extends StatelessWidget
                     backgroundImage: profileImage.isNotEmpty
                         ? NetworkImage(profileImage)
                         : null,
-                    child:
-                        profileImage.isEmpty ? const Icon(Icons.person) : null,
+                    child: profileImage.isEmpty
+                        ? const Icon(
+                            EneftyIcons.user_outline,
+                          )
+                        : null,
                   ),
                   const SizedBox(width: 10),
                   Column(
@@ -403,7 +430,12 @@ class HealthMonitoringAppbar extends StatelessWidget
           } else {
             return const Row(
               children: [
-                CircleAvatar(radius: 25),
+                CircleAvatar(
+                  radius: 25,
+                  child: const Icon(
+                    EneftyIcons.user_outline,
+                  ),
+                ),
                 SizedBox(width: 3),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

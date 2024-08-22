@@ -1,6 +1,6 @@
 import 'package:abtms/account_type.dart';
 import 'package:abtms/controllers/controllers.dart';
-import 'package:abtms/health_screens/health_profile.dart';
+import 'package:abtms/health_screens/settings/health_profile.dart';
 import 'package:abtms/health_screens/settings/health_edit_profile.dart';
 import 'package:abtms/healthcare_provider_login_signup/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

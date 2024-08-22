@@ -1,6 +1,7 @@
 import 'package:abtms/controllers/controllers.dart';
 import 'package:abtms/health_screens/patients/patient_details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enefty_icons/enefty_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,7 @@ class PatientsPage extends StatelessWidget {
                       itemBuilder: (context, index) {
                         Map<String, dynamic> patientData =
                             patients[index].data() as Map<String, dynamic>;
+
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -89,7 +91,7 @@ class PatientsPage extends StatelessWidget {
                             padding: const EdgeInsets.all(10),
                             margin: const EdgeInsets.only(bottom: 15),
                             decoration: BoxDecoration(
-                              color: Colors.grey[200],
+                              color: Color.fromARGB(255, 244, 244, 255),
                               border: Border.all(
                                 width: 1,
                                 color: const Color.fromRGBO(224, 224, 224, 1),
@@ -104,21 +106,28 @@ class PatientsPage extends StatelessWidget {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
                                     child: SizedBox(
-                                      width:
-                                          100, // Set a specific width for the image
-                                      height:
-                                          100, // Set a specific height for the image
+                                      width: 100,
+                                      height: 100,
                                       child: Image.network(
-                                        patientData['profileImage'] ??
-                                            'https://example.com/default-profile.png',
+                                        patientData['profileImage'] ?? '',
                                         fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return CircleAvatar(
+                                            child: Center(
+                                              child: const Icon(
+                                                EneftyIcons.user_outline,
+                                                size: 50.0,
+                                                color: Color(0xFF3E4D99),
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(
-                                    width:
-                                        10), // Add some spacing between the image and text
+                                const SizedBox(width: 10),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -138,7 +147,6 @@ class PatientsPage extends StatelessWidget {
                                         patientData['mobileNo'],
                                         style: const TextStyle(
                                           fontSize: 15,
-                                          //fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                       const SizedBox(
@@ -152,7 +160,6 @@ class PatientsPage extends StatelessWidget {
                                             patientData['gender'],
                                             style: const TextStyle(
                                               fontSize: 15,
-                                              // fontWeight: FontWeight.w500,
                                             ),
                                           ),
                                           Container(
