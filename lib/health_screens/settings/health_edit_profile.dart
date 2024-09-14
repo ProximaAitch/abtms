@@ -24,7 +24,6 @@ class _HealthEditProfileState extends State<HealthEditProfile> {
 
   TextEditingController mobileNoController = TextEditingController();
 
-  // TextEditingController hCodeController = TextEditingController();
 
   String email = '';
 
@@ -58,7 +57,6 @@ class _HealthEditProfileState extends State<HealthEditProfile> {
         usernameController.text = userProfile['username'] ?? '';
         addressController.text = userProfile['address'] ?? '';
         mobileNoController.text = userProfile['mobileNo'] ?? '';
-        // hCodeController.text = userProfile['hCode'] ?? '';
         selectedGender = userProfile['gender'] ?? 'Male';
         profileImageUrl = userProfile['profileImage'] ?? '';
       });
@@ -90,7 +88,6 @@ class _HealthEditProfileState extends State<HealthEditProfile> {
       gender: selectedGender,
       address: addressController.text.trim(),
       mobileNo: mobileNoController.text.trim(),
-      //hCode: hCodeController.text.trim(),
     );
     if (mounted) {
       final snackBar = SnackBar(
@@ -254,7 +251,7 @@ class _HealthEditProfileState extends State<HealthEditProfile> {
                     child: Stack(
                       children: [
                         CircleAvatar(
-                          backgroundColor: Color.fromARGB(255, 244, 244, 255),
+                          backgroundColor: const Color.fromARGB(255, 244, 244, 255),
                           radius: 70,
                           backgroundImage: _profileImage != null
                               ? FileImage(File(_profileImage!.path))
@@ -278,8 +275,8 @@ class _HealthEditProfileState extends State<HealthEditProfile> {
                               backgroundColor: const Color(0xFF3E4D99),
                               foregroundColor: Colors.white,
                             ),
-                            child: const Icon(Icons.camera_alt),
                             onPressed: _showImageOptions,
+                            child: const Icon(Icons.camera_alt),
                           ),
                         ),
                       ],
@@ -344,12 +341,17 @@ class _HealthEditProfileState extends State<HealthEditProfile> {
                     ),
                   ),
                   DropdownButtonFormField<String>(
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                      fontFamily: 'Poppins',
+                    ),
                     borderRadius: BorderRadius.circular(50.0),
                     decoration: InputDecoration(
-                      fillColor: Color.fromARGB(255, 244, 244, 255),
+                      fillColor: const Color.fromARGB(255, 244, 244, 255),
                       filled: true,
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 20),
+                          horizontal: 20, vertical: 14),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(50.0),
                         borderSide: BorderSide.none,

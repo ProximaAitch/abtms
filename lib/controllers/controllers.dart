@@ -35,6 +35,12 @@ class _EditTextFormFieldState extends State<EditTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: TextStyle(
+        fontWeight: FontWeight.w400,
+        color: Colors.black,
+        fontFamily: 'Poppins',
+        fontSize: 14,
+      ),
       controller: widget.controller,
       decoration: InputDecoration(
         fillColor: Color.fromARGB(255, 244, 244, 255),

@@ -4,6 +4,7 @@ import 'package:abtms/health_screens/settings/health_profile.dart';
 import 'package:abtms/health_screens/settings/health_edit_profile.dart';
 import 'package:abtms/healthcare_provider_login_signup/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:enefty_icons/enefty_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -176,21 +177,22 @@ class HealthSettingsPage extends StatelessWidget {
                         width: 50,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color.fromARGB(255, 213, 219, 250),
+                          color: Color.fromARGB(255, 244, 244, 255),
                         ),
                         child: Center(
                           child: IconButton(
                             onPressed: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const HealthProfile()));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const HealthProfile(),
+                                ),
+                              );
                             },
                             icon: const Icon(
                               CupertinoIcons.forward,
                               color: Color(0xFF3E4D99),
-                              size: 30,
+                              size: 25,
                             ),
                           ),
                         ),
@@ -220,10 +222,10 @@ class HealthSettingsPage extends StatelessWidget {
                   child: const Row(
                     children: [
                       CircleAvatar(
-                        backgroundColor: Color.fromARGB(40, 62, 77, 153),
-                        foregroundColor: Color(0xFF3E4D99),
+                        backgroundColor: Color.fromRGBO(227, 242, 253, 1),
+                        foregroundColor: Colors.blue,
                         radius: 25,
-                        child: Icon(
+                        child: const Icon(
                           CupertinoIcons.person_fill,
                           size: 25,
                         ),
@@ -257,14 +259,7 @@ class HealthSettingsPage extends StatelessWidget {
               ),
               vSpace(height: 0.01),
               GestureDetector(
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => PatientChangePassword(),
-                  //   ),
-                  // );
-                },
+                onTap: () {},
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
@@ -273,11 +268,11 @@ class HealthSettingsPage extends StatelessWidget {
                   child: Row(
                     children: [
                       CircleAvatar(
-                        backgroundColor: Colors.green[50],
-                        foregroundColor: Colors.green,
+                        backgroundColor: Colors.orange[50],
+                        foregroundColor: Colors.orange,
                         radius: 25,
                         child: const Icon(
-                          CupertinoIcons.lock_fill,
+                          EneftyIcons.lock_outline,
                           size: 25,
                         ),
                       ),
@@ -316,11 +311,11 @@ class HealthSettingsPage extends StatelessWidget {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: Colors.teal[50],
-                      foregroundColor: Colors.teal,
+                      backgroundColor: Colors.purple[50],
+                      foregroundColor: Colors.purple,
                       radius: 25,
                       child: const Icon(
-                        CupertinoIcons.share_solid,
+                        EneftyIcons.share_outline,
                         size: 25,
                       ),
                     ),
@@ -358,11 +353,11 @@ class HealthSettingsPage extends StatelessWidget {
                 child: Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: Colors.blueGrey[50],
-                      foregroundColor: Colors.blueGrey,
+                      backgroundColor: Colors.teal[50],
+                      foregroundColor: Colors.teal,
                       radius: 25,
                       child: const Icon(
-                        CupertinoIcons.info_circle_fill,
+                        EneftyIcons.info_circle_outline,
                         size: 25,
                       ),
                     ),

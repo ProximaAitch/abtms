@@ -1,5 +1,5 @@
 import 'package:abtms/controllers/controllers.dart';
-import 'package:abtms/health_screens/patients/patient_details.dart';
+import 'package:abtms/health_screens/patients/patient_history.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -75,12 +75,44 @@ class PatientsPage extends StatelessWidget {
                         Map<String, dynamic> patientData =
                             patients[index].data() as Map<String, dynamic>;
 
+                        // Use a placeholder or icon if the profile image is not valid
+                        Widget profileImageWidget;
+                        if (patientData['profileImage'] != null &&
+                            patientData['profileImage'].isNotEmpty) {
+                          profileImageWidget = Image.network(
+                            patientData['profileImage'],
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return CircleAvatar(
+                                child: Center(
+                                  child: const Icon(
+                                    EneftyIcons.user_outline,
+                                    size: 50.0,
+                                    color: Color(0xFF3E4D99),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          // Default avatar if no profile image is available
+                          profileImageWidget = CircleAvatar(
+                            child: Center(
+                              child: const Icon(
+                                EneftyIcons.user_outline,
+                                size: 50.0,
+                                color: Color(0xFF3E4D99),
+                              ),
+                            ),
+                          );
+                        }
+
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => PatientDetailPage(
+                                builder: (context) => PatientHistoryPage(
                                   patientData: patientData,
                                 ),
                               ),
@@ -108,22 +140,8 @@ class PatientsPage extends StatelessWidget {
                                     child: SizedBox(
                                       width: 100,
                                       height: 100,
-                                      child: Image.network(
-                                        patientData['profileImage'] ?? '',
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return CircleAvatar(
-                                            child: Center(
-                                              child: const Icon(
-                                                EneftyIcons.user_outline,
-                                                size: 50.0,
-                                                color: Color(0xFF3E4D99),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
+                                      child:
+                                          profileImageWidget, // Use the widget defined above
                                     ),
                                   ),
                                 ),
