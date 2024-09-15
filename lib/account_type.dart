@@ -1,4 +1,4 @@
-import 'package:abtms/controllers/controllers.dart';
+import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/healthcare_provider_login_signup/login.dart';
 import 'package:abtms/patient_login_signup/login.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +18,8 @@ class AccountSelectionPage extends StatelessWidget {
             children: [
               Image.asset(
                 "assets/images/logo/purple_heart-removebg-preview.png",
-                height: 50,
-                width: 50,
+                height: 40,
+                width: 40,
               ),
               const Text(
                 "abtms",
@@ -30,7 +30,7 @@ class AccountSelectionPage extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Color(0xFF3E4D99),
-                  fontSize: 16,
+                  fontSize: 18,
                 ),
               ),
               const Text(
@@ -38,7 +38,7 @@ class AccountSelectionPage extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Color(0xFF3E4D99),
-                  fontSize: 16,
+                  fontSize: 18,
                 ),
               ),
               vSpace(height: 0.15),
@@ -94,7 +94,7 @@ class AccountSelectionPage extends StatelessWidget {
                       height: 50,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF3E4D99),
+                          backgroundColor: const Color(0xFF343F9B),
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),

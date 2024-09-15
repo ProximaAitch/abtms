@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:abtms/controllers/controllers.dart';
+import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/healthcare_provider_login_signup/auth_service.dart';
 import 'package:abtms/healthcare_provider_login_signup/health_forgot_password.dart';
 import 'package:abtms/healthcare_provider_login_signup/signup.dart';
@@ -60,21 +60,21 @@ class _HealthLoginPageState extends State<HealthLoginPage> {
       decoration: InputDecoration(
         hintText: "********",
         hintStyle: TextStyle(color: Colors.grey[500]),
-        fillColor: Colors.grey[200],
-        filled: true,
+        // fillColor: Colors.grey[200],
+        // filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: Colors.black, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
           borderSide: BorderSide(
             color: Color(0xFF3E4D99),
-            width: 1,
+            width: 2,
           ),
         ),
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         suffixIcon: IconButton(
           icon: Icon(
             _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
@@ -87,58 +87,57 @@ class _HealthLoginPageState extends State<HealthLoginPage> {
   }
 
   void _handleGoogleSignIn() async {
-  setState(() {
-    _isLoading = true;
-  });
-
-  try {
-    User? user = await _authService.signInWithGoogle();
-    if (user != null) {
-      final DocumentSnapshot userDoc = await _firestore
-          .collection('healthcare_providers')
-          .doc(user.uid)
-          .get();
-
-      // Ensure the data is a Map
-      final Map<String, dynamic>? userData = userDoc.data() as Map<String, dynamic>?;
-
-      // Debugging log
-      print('User document data: $userData');
-
-      if (userDoc.exists &&
-          userData != null &&
-          userData.containsKey('address') &&
-          userData.containsKey('gender') &&
-          userData.containsKey('hCode') &&
-          userData.containsKey('mobileNo') &&
-          userData.containsKey('username')) {
-        // Navigate to HomeScreen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  HealthWidget()), // Replace HomeScreen with your actual home screen widget
-        );
-      } else {
-        // Navigate to AddDetailsPage
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  HealthOtherInfoPage()), // Replace AddDetailsPage with your actual add details screen widget
-        );
-      }
-    }
-  } catch (e) {
-    print('Error during Google Sign-In: $e');
-  } finally {
     setState(() {
-      _isLoading = false;
+      _isLoading = true;
     });
+
+    try {
+      User? user = await _authService.signInWithGoogle();
+      if (user != null) {
+        final DocumentSnapshot userDoc = await _firestore
+            .collection('healthcare_providers')
+            .doc(user.uid)
+            .get();
+
+        // Ensure the data is a Map
+        final Map<String, dynamic>? userData =
+            userDoc.data() as Map<String, dynamic>?;
+
+        // Debugging log
+        print('User document data: $userData');
+
+        if (userDoc.exists &&
+            userData != null &&
+            userData.containsKey('address') &&
+            userData.containsKey('gender') &&
+            userData.containsKey('hCode') &&
+            userData.containsKey('mobileNo') &&
+            userData.containsKey('username')) {
+          // Navigate to HomeScreen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    HealthWidget()), // Replace HomeScreen with your actual home screen widget
+          );
+        } else {
+          // Navigate to AddDetailsPage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    HealthOtherInfoPage()), // Replace AddDetailsPage with your actual add details screen widget
+          );
+        }
+      }
+    } catch (e) {
+      print('Error during Google Sign-In: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
-}
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +203,7 @@ class _HealthLoginPageState extends State<HealthLoginPage> {
                         },
                       ),
                     ),
-                    vSpace(height: 0.01),
+                    vSpace(height: 0.02),
                     SizedBox(
                       height: 50,
                       width: double.infinity,
@@ -214,7 +213,7 @@ class _HealthLoginPageState extends State<HealthLoginPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           foregroundColor: Colors.white,
-                          backgroundColor: const Color(0xFF3E4D99),
+                          backgroundColor: const Color(0xFF343F9B),
                         ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -242,46 +241,46 @@ class _HealthLoginPageState extends State<HealthLoginPage> {
                               ),
                       ),
                     ),
-                    vSpace(height: 0.025),
-                    SizedBox(
-                      height: 50,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          side: const BorderSide(width: 2, color: Colors.black),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          foregroundColor: Colors.black,
-                          backgroundColor: Colors.white,
-                        ),
-                        onPressed: _handleGoogleSignIn,
-                        child: _isLoading
-                            ? const SpinKitThreeBounce(
-                                color: Color(0xFF3E4D99),
-                                size: 20.0,
-                              )
-                            : Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    "assets/images/logo/google_logo-removebg-preview.png",
-                                    height: 35,
-                                    width: 35,
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  const Text(
-                                    "Continue with Google",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                      ),
-                    ),
-                    vSpace(height: 0.050),
+                    // vSpace(height: 0.025),
+                    // SizedBox(
+                    //   height: 50,
+                    //   width: double.infinity,
+                    //   child: ElevatedButton(
+                    //     style: ElevatedButton.styleFrom(
+                    //       elevation: 0,
+                    //       side: const BorderSide(width: 2, color: Colors.black),
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(10),
+                    //       ),
+                    //       foregroundColor: Colors.black,
+                    //       backgroundColor: Colors.white,
+                    //     ),
+                    //     onPressed: _handleGoogleSignIn,
+                    //     child: _isLoading
+                    //         ? const SpinKitThreeBounce(
+                    //             color: Color(0xFF3E4D99),
+                    //             size: 20.0,
+                    //           )
+                    //         : Row(
+                    //             mainAxisAlignment: MainAxisAlignment.center,
+                    //             children: [
+                    //               Image.asset(
+                    //                 "assets/images/logo/google_logo-removebg-preview.png",
+                    //                 height: 35,
+                    //                 width: 35,
+                    //               ),
+                    //               const SizedBox(
+                    //                 width: 5,
+                    //               ),
+                    //               const Text(
+                    //                 "Continue with Google",
+                    //                 style: TextStyle(fontSize: 16),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //   ),
+                    // ),
+                    vSpace(height: 0.030),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -304,7 +303,7 @@ class _HealthLoginPageState extends State<HealthLoginPage> {
                       ],
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     Center(
                       child: SizedBox(
@@ -321,7 +320,7 @@ class _HealthLoginPageState extends State<HealthLoginPage> {
                                     builder: (context) =>
                                         AccountSelectionPage()));
                           },
-                          child: Text("Back"),
+                          child: Text("< Back"),
                         ),
                       ),
                     ),

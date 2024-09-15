@@ -1,7 +1,7 @@
 import 'package:abtms/account_type.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:abtms/controllers/controllers.dart';
+import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/healthcare_provider_login_signup/login.dart';
 import 'package:abtms/healthcare_provider_login_signup/auth_service.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -97,18 +97,19 @@ class _HealthSignUpPageState extends State<HealthSignUpPage> {
       ),
       decoration: InputDecoration(
         hintText: "********",
-        hintStyle: TextStyle(color: Colors.grey[500]),
-        fillColor: Colors.grey[200],
-        filled: true,
+        hintStyle:
+            TextStyle(color: Colors.grey[500], fontWeight: FontWeight.w400),
+        // fillColor: Colors.grey[200],
+        // filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: Colors.black, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
           borderSide: BorderSide(
             color: Color(0xFF3E4D99),
-            width: 1,
+            width: 2,
           ),
         ),
         contentPadding:
@@ -134,18 +135,19 @@ class _HealthSignUpPageState extends State<HealthSignUpPage> {
       ),
       decoration: InputDecoration(
         hintText: "********",
-        hintStyle: TextStyle(color: Colors.grey[500]),
-        fillColor: Colors.grey[200],
-        filled: true,
+        hintStyle:
+            TextStyle(color: Colors.grey[500], fontWeight: FontWeight.w400),
+        // fillColor: Colors.grey[200],
+        // filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: Colors.black, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
           borderSide: BorderSide(
             color: Color(0xFF3E4D99),
-            width: 1,
+            width: 2,
           ),
         ),
         contentPadding:
@@ -257,7 +259,7 @@ class _HealthSignUpPageState extends State<HealthSignUpPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           foregroundColor: Colors.white,
-                          backgroundColor: const Color(0xFF3E4D99),
+                          backgroundColor: const Color(0xFF343F9B),
                         ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -326,7 +328,7 @@ class _HealthSignUpPageState extends State<HealthSignUpPage> {
                                     builder: (context) =>
                                         AccountSelectionPage()));
                           },
-                          child: Text("Back"),
+                          child: Text("< Back"),
                         ),
                       ),
                     ),

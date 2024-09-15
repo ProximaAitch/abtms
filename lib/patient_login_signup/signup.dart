@@ -2,7 +2,7 @@ import 'package:abtms/account_type.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:abtms/controllers/controllers.dart';
+import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/patient_login_signup/login.dart';
 import 'package:abtms/patient_login_signup/auth_service.dart';
 import 'package:flutter/widgets.dart';
@@ -96,11 +96,12 @@ class _PatientSignUpPageState extends State<PatientSignUpPage> {
       obscureText: !_isPasswordVisible,
       validator: validatePassword,
       style: const TextStyle(
-        color: Color(0xFF3E4D99),
+        color: Color(0xFF343F9B),
       ),
       decoration: InputDecoration(
         hintText: "********",
-        hintStyle: TextStyle(color: Colors.grey[500]),
+        hintStyle:
+            TextStyle(color: Colors.grey[500], fontWeight: FontWeight.w400),
         fillColor: Colors.grey[200],
         filled: true,
         border: OutlineInputBorder(
@@ -110,7 +111,7 @@ class _PatientSignUpPageState extends State<PatientSignUpPage> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
           borderSide: BorderSide(
-            color: Color(0xFF3E4D99),
+            color: Color(0xFF343F9B),
             width: 1,
           ),
         ),
@@ -133,11 +134,12 @@ class _PatientSignUpPageState extends State<PatientSignUpPage> {
       obscureText: !_isConfirmPasswordVisible,
       validator: validateConfirmPassword,
       style: const TextStyle(
-        color: Color(0xFF3E4D99),
+        color: Color(0xFF343F9B),
       ),
       decoration: InputDecoration(
         hintText: "********",
-        hintStyle: TextStyle(color: Colors.grey[500]),
+        hintStyle:
+            TextStyle(color: Colors.grey[500], fontWeight: FontWeight.w400),
         fillColor: Colors.grey[200],
         filled: true,
         border: OutlineInputBorder(
@@ -147,8 +149,8 @@ class _PatientSignUpPageState extends State<PatientSignUpPage> {
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
           borderSide: BorderSide(
-            color: Color(0xFF3E4D99),
-            width: 1,
+            color: Color(0xFF343F9B),
+            width: 2,
           ),
         ),
         contentPadding:
@@ -260,7 +262,7 @@ class _PatientSignUpPageState extends State<PatientSignUpPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           foregroundColor: Colors.white,
-                          backgroundColor: const Color(0xFF3E4D99),
+                          backgroundColor: const  Color(0xFF343F9B),
                         ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -328,7 +330,7 @@ class _PatientSignUpPageState extends State<PatientSignUpPage> {
                                     builder: (context) =>
                                         AccountSelectionPage()));
                           },
-                          child: Text("Back"),
+                          child: Text("< Back"),
                         ),
                       ),
                     ),

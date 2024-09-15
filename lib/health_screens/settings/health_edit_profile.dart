@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:abtms/controllers/controllers.dart';
+import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/healthcare_provider_login_signup/auth_service.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enefty_icons/enefty_icons.dart';
@@ -23,7 +23,6 @@ class _HealthEditProfileState extends State<HealthEditProfile> {
   TextEditingController addressController = TextEditingController();
 
   TextEditingController mobileNoController = TextEditingController();
-
 
   String email = '';
 
@@ -210,6 +209,9 @@ class _HealthEditProfileState extends State<HealthEditProfile> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         foregroundColor: const Color(0xFF3E4D99),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        shadowColor: Colors.white,
         title: const Text(
           'Edit Profile',
           style: TextStyle(fontSize: 17),
@@ -251,7 +253,8 @@ class _HealthEditProfileState extends State<HealthEditProfile> {
                     child: Stack(
                       children: [
                         CircleAvatar(
-                          backgroundColor: const Color.fromARGB(255, 244, 244, 255),
+                          backgroundColor:
+                              const Color.fromARGB(255, 244, 244, 255),
                           radius: 70,
                           backgroundImage: _profileImage != null
                               ? FileImage(File(_profileImage!.path))

@@ -1,50 +1,14 @@
-import 'dart:math';
-import 'package:abtms/controllers/controllers.dart';
-import 'package:abtms/patient_screens/tips/health_tips_details.dart';
+import 'package:abtms/patient_screens/tips/chatbot.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:abtms/widgets/my_widgets.dart';
+import 'package:abtms/patient_screens/tips/health_tips_details.dart';
 
 class HealthTipsPage extends StatelessWidget {
-  final List<String> categories = [
-    'Diet Best Practices',
-    'Sleeping',
-    'Exercises',
-    'Hydration',
-    'Fruits and Vegetables'
-  ];
-
-  final Map<String, List<String>> categoryImages = {
-    'Diet Best Practices': [
-      'assets/images/health_tips/diet/06a1f8e1c6d33fc7616c91a152b06629.jpg',
-      'assets/images/health_tips/diet/Christmas-food-photographer-Robin-Goodlad9-1.jpg',
-      'assets/images/health_tips/diet/unnamed.jpg'
-    ],
-    'Sleeping': [
-      'assets/images/health_tips/sleep/700-00519551en_Masterfile.jpg',
-      'assets/images/health_tips/sleep/depositphotos_420010652-stock-photo-african-american-guy-sleeping-lying.jpg',
-      'assets/images/health_tips/sleep/Free Photo _ The young man lying in a bed.jpeg'
-    ],
-    'Exercises': [
-      'assets/images/health_tips/exercise/exercise 1.jpg',
-      'assets/images/health_tips/exercise/exercise 2.jpg',
-      'assets/images/health_tips/exercise/exercise 3.jpg'
-    ],
-    'Hydration': [
-      'assets/images/health_tips/hydration/Best side effect_ glowing skin.jpeg',
-      'assets/images/health_tips/hydration/How To Stay Hydrated All Day — The College Nutritionist.jpeg',
-      'assets/images/health_tips/hydration/Untitled-design-3-1.png'
-    ],
-    'Fruits and Vegetables': [
-      'assets/images/health_tips/fruits_and_vegetables/A Complete Guide to Citrus Fruits.jpeg',
-      'assets/images/health_tips/fruits_and_vegetables/Fruit Christmas Tree - Iowa Girl Eats.jpeg',
-      'assets/images/health_tips/fruits_and_vegetables/How To Plan A Vegetable Garden In 7 Easy Steps.jpeg'
-    ],
-  };
-
-  final random = Random();
-
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: const MyAppBar(title: 'Health Tips'),
       body: Padding(
@@ -55,172 +19,353 @@ class HealthTipsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(16.0),
-                height: 100,
+                padding: EdgeInsets.all(screenHeight * 0.02),
+                height: screenHeight * 0.22,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(20),
                   gradient: const LinearGradient(
                     colors: [
-                      Color(0xFF3E4D99),
-                      Color.fromARGB(255, 23, 29, 58),
+                      Color(0xFF404FC3),
+                      Color(0xFF343F9B),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                 ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      'Health Tips',
-                      style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Tap a card to view health tip',
-                      style: TextStyle(fontSize: 15, color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        const SizedBox(width: 5),
                         Text(
-                          'Scroll horizontally to see more cards',
-                          style:
-                              TextStyle(fontSize: 14, color: Colors.grey[600]),
+                          "Chat with Bot",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: screenWidth * 0.05,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        const Text(
+                          "Interact with a bot for",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        const Text(
+                          "more custom tips",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatBotScreen()));
+                          },
+                          child: const Text("Chat with Bot"),
                         ),
                       ],
                     ),
-                    // SizedBox(
-                    //   height: 7,
-                    // ),
-                    // Row(
-                    //   children: [
-                    //     SizedBox(width: 5),
-                    //     Text(
-                    //       'Tap a card to view health tip',
-                    //       style:
-                    //           TextStyle(fontSize: 14, color: Colors.grey[600]),
-                    //     ),
-                    //   ],
-                    // ),
-                    const SizedBox(
-                      height: 7,
+                    Image.asset(
+                      "assets/images/Robot.png",
+                      height: screenHeight * 0.2,
                     ),
                   ],
                 ),
               ),
+              SizedBox(height: screenHeight * 0.03),
+              Text(
+                "Tap a card to generate tips on that section",
+                style: TextStyle(color: Colors.grey),
+              ),
+              SizedBox(height: screenHeight * 0.03),
               SizedBox(
-                height: screenHeight * 0.55,
-                child: ListView.builder(
+                height: screenHeight * 0.4,
+                child: ListView(
                   scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    final category = categories[index];
-                    final images = categoryImages[category]!;
-                    final image = images[random.nextInt(images.length)];
-                    return HealthTipCard(category: category, image: image);
-                  },
+                  children: [
+                    // Directly implemented health tip cards using Containers
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HealthTipDetailPage(
+                              category: "Hydration",
+                              image: "assets/images/hydration.png",
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 16.0),
+                        width: screenWidth * 0.6,
+                        padding: EdgeInsets.all(screenWidth * 0.05),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFF085C81),
+                              Color(0xFF0088C2),
+                            ],
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Hydration",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * 0.05,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Center(
+                              child: Image.asset(
+                                "assets/images/hydration.png",
+                                width: screenHeight * 0.18,
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              child: Icon(
+                                CupertinoIcons.forward,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HealthTipDetailPage(
+                              category: "Diet",
+                              image: "assets/images/diet.png",
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 16.0),
+                        width: screenWidth * 0.6,
+                        padding: EdgeInsets.all(screenWidth * 0.05),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFF006A24),
+                              Color(0xFF00AA3A),
+                            ],
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Diet",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * 0.05,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Center(
+                              child: Image.asset(
+                                "assets/images/diet.png",
+                                width: screenHeight * 0.2,
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              child: Icon(
+                                CupertinoIcons.forward,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HealthTipDetailPage(
+                              category: "Personal Hygiene",
+                              image: "assets/images/washing_hands.png",
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 16.0),
+                        width: screenWidth * 0.6,
+                        padding: EdgeInsets.all(screenWidth * 0.05),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFF6421A7),
+                              Color(0xFF280C43),
+                            ],
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Hygiene",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * 0.05,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Center(
+                              child: Image.asset(
+                                "assets/images/washing_hands.png",
+                                width: screenHeight * 0.20,
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              child: Icon(
+                                CupertinoIcons.forward,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HealthTipDetailPage(
+                              category: "Exercise",
+                              image: "assets/images/exercise.png",
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 16.0),
+                        width: screenWidth * 0.6,
+                        padding: EdgeInsets.all(screenWidth * 0.05),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFF085C81),
+                              Color(0xFF0088C2),
+                            ],
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Exercise",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * 0.05,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Center(
+                              child: Image.asset(
+                                "assets/images/exercise.png",
+                                width: screenHeight * 0.20,
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              child: Icon(
+                                CupertinoIcons.forward,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HealthTipDetailPage(
+                              category: "Sleep",
+                              image: "assets/images/sleeping.png",
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 16.0),
+                        width: screenWidth * 0.6,
+                        padding: EdgeInsets.all(screenWidth * 0.05),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFF4E0847),
+                              Color(0xFFA3669D),
+                            ],
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Sleep",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: screenWidth * 0.05,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            Center(
+                              child: Image.asset(
+                                "assets/images/sleeping.png",
+                                width: screenHeight * 0.3,
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.bottomRight,
+                              child: Icon(
+                                CupertinoIcons.forward,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-@override
-class HealthTipCard extends StatelessWidget {
-  final String category;
-  final String image;
-
-  const HealthTipCard({super.key, required this.category, required this.image});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HealthTipDetailPage(
-              category: category,
-              image: image,
-            ),
-          ),
-        );
-      },
-      child: Container(
-        width: 270,
-        margin: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          image: DecorationImage(
-            image: AssetImage(image),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                height: 300, //* (1 / 2), // 1/3rd of the container height
-                width: 300,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.transparent, Colors.black.withOpacity(1)],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.all(30),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-                child: Text(
-                  category,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );

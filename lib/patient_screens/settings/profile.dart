@@ -192,12 +192,8 @@ class PatientProfilePage extends StatelessWidget {
                     },
                     child: Text("Edit Profile"),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 10),
-                    child: const Divider(
-                      color: Color.fromARGB(255, 216, 216, 255),
-                    ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Container(
                     padding: const EdgeInsets.only(left: 20, right: 20),
@@ -280,7 +276,7 @@ class PatientProfilePage extends StatelessWidget {
           ),
           alignment: Alignment.centerLeft,
           width: double.infinity,
-          height: 55,
+          height: 45,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
             color: Color.fromARGB(255, 244, 244, 255),

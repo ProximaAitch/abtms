@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       title: "abtms",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: "Poppins"),
-      home: const SplashScreen(),
+      home: SplashScreen(),
     );
   }
 }

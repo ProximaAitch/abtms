@@ -1,4 +1,4 @@
-import 'package:abtms/controllers/controllers.dart';
+import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/patient_login_signup/auth_service.dart';
 import 'package:abtms/patient_login_signup/set_up_profile.dart';
 import 'package:flutter/material.dart';
@@ -111,23 +111,25 @@ class _OtherInfoPageState extends State<OtherInfoPage> {
                       value: _selectedGender,
                       validator: validateGender,
                       decoration: InputDecoration(
-                        fillColor: Colors.grey[200],
-                        filled: true,
+                        // fillColor: Colors.grey[200],
+                        // filled: true,
                         hintText: 'Select your gender',
-                        hintStyle: TextStyle(color: Colors.grey[500]),
+                        hintStyle: TextStyle(
+                            color: Colors.grey[500],
+                            fontWeight: FontWeight.w400),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(7),
                           borderSide: BorderSide.none,
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                           borderSide: const BorderSide(
-                            width: 1,
+                            width: 2,
                             color: Color(0xFF3E4D99),
                           ),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 14),
+                            horizontal: 12, vertical: 14),
                       ),
                       items: ['Male', 'Female']
                           .map((gender) => DropdownMenuItem<String>(
@@ -159,23 +161,23 @@ class _OtherInfoPageState extends State<OtherInfoPage> {
                       validator: validateMobileNo,
                       controller: mobileNoController,
                       decoration: InputDecoration(
-                        fillColor: Colors.grey[200],
-                        filled: true,
+                        // fillColor: Colors.grey[200],
+                        // filled: true,
                         hintText: "0xxxxxxxxx",
                         hintStyle: TextStyle(color: Colors.grey[500]),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(7.0),
                           borderSide: BorderSide.none,
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(7.0),
                           borderSide: const BorderSide(
-                            width: 1,
+                            width: 2,
                             color: Color(0xFF3E4D99),
                           ),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 14),
+                            horizontal: 12, vertical: 14),
                       ),
                     ),
                     vSpace(height: 0.020),

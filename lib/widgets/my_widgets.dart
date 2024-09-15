@@ -83,22 +83,23 @@ class MyTextFormField extends StatelessWidget {
       ),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(color: Colors.grey[500]),
-        fillColor: Colors.grey[200],
-        filled: true,
+        hintStyle:
+            TextStyle(color: Colors.grey[500], fontWeight: FontWeight.w400),
+        // fillColor: Colors.grey[200],
+        // filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: Colors.black, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
           borderSide: BorderSide(
             color: Color(0xFF3E4D99),
-            width: 1,
+            width: 2,
           ),
         ),
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       ),
       validator: validator,
     );
@@ -294,6 +295,148 @@ class PatientMonitoringAppbar extends StatelessWidget
   Size get preferredSize => const Size.fromHeight(65);
 }
 
+class UpdatedMonitoringAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
+  const UpdatedMonitoringAppBar({super.key});
+
+  Future<Map<String, dynamic>> fetchUserData() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('patients')
+          .doc(user.uid)
+          .get();
+      if (docSnapshot.exists) {
+        return docSnapshot.data()!;
+      }
+    }
+    return {};
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: Color(0xFFf2f3f5),
+      toolbarHeight: 65,
+      automaticallyImplyLeading: false,
+      title: FutureBuilder<Map<String, dynamic>>(
+        future: fetchUserData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Welcome",
+                  style: TextStyle(fontSize: 15),
+                ),
+                Text(
+                  "Loading...",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              ],
+            );
+          } else if (snapshot.hasError) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PatientProfilePage(),
+                  ),
+                );
+              },
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Welcome",
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  Text("Error"),
+                ],
+              ),
+            );
+          } else if (snapshot.hasData) {
+            final data = snapshot.data!;
+            final username = data['username'] ?? 'User';
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PatientProfilePage(),
+                  ),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Welcome",
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  Text(
+                    username,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Welcome"),
+                Text("User"),
+              ],
+            );
+          }
+        },
+      ),
+      actions: [
+        FutureBuilder<Map<String, dynamic>>(
+          future: fetchUserData(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final data = snapshot.data!;
+              final profileImage = data['profileImage'] ?? '';
+
+              return Row(
+                children: [
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundColor: const Color.fromARGB(255, 244, 244, 255),
+                    backgroundImage: profileImage.isNotEmpty
+                        ? NetworkImage(profileImage)
+                        : null,
+                    child: profileImage.isEmpty
+                        ? const Icon(
+                            Icons.person_outline,
+                          )
+                        : null,
+                  ),
+                  const SizedBox(width: 10),
+                ],
+              );
+            } else {
+              return const SizedBox();
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(65);
+}
+
 class HealthMonitoringAppbar extends StatelessWidget
     implements PreferredSizeWidget {
   const HealthMonitoringAppbar({super.key});
@@ -316,162 +459,133 @@ class HealthMonitoringAppbar extends StatelessWidget
   Widget build(BuildContext context) {
     return AppBar(
       toolbarHeight: 65,
-      // backgroundColor: Colors.grey[100],
       automaticallyImplyLeading: false,
       title: FutureBuilder<Map<String, dynamic>>(
         future: fetchUserData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PatientProfilePage(),
-                  ),
-                );
-              },
-              child: const Row(
-                children: [
-                  CircleAvatar(radius: 25),
-                  SizedBox(width: 3),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Welcome",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      Text(
-                        "Loading...",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
+            return _buildLoadingTitle();
           } else if (snapshot.hasError) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PatientProfilePage(),
-                  ),
-                );
-              },
-              child: const Row(
-                children: [
-                  CircleAvatar(
-                    radius: 25,
-                    child: const Icon(
-                      EneftyIcons.user_outline,
-                    ),
-                  ),
-                  SizedBox(width: 3),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Welcome",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      Text(
-                        "Error",
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
+            return _buildErrorTitle();
           } else if (snapshot.hasData) {
             final data = snapshot.data!;
             final username = data['username'] ?? 'User';
-            final profileImage = data['profileImage'] ?? '';
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HealthProfile(),
-                  ),
-                );
-              },
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 25,
-                    backgroundImage: profileImage.isNotEmpty
-                        ? NetworkImage(profileImage)
-                        : null,
-                    child: profileImage.isEmpty
-                        ? const Icon(
-                            EneftyIcons.user_outline,
-                          )
-                        : null,
-                  ),
-                  const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Welcome",
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      Text(
-                        username,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
+            return _buildUserTitle(username);
           } else {
-            return const Row(
-              children: [
-                CircleAvatar(
-                  radius: 25,
-                  child: const Icon(
-                    EneftyIcons.user_outline,
-                  ),
-                ),
-                SizedBox(width: 3),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Welcome"),
-                    Text("User"),
-                  ],
-                ),
-              ],
-            );
+            return _buildDefaultTitle();
           }
         },
       ),
       actions: [
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          alignment: Alignment.bottomRight,
-          child: const Text(
-            "Patients",
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF3E4D99),
-            ),
-          ),
+        FutureBuilder<Map<String, dynamic>>(
+          future: fetchUserData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return _buildLoadingAvatar(context);
+            } else if (snapshot.hasError) {
+              return _buildErrorAvatar(context);
+            } else if (snapshot.hasData) {
+              final data = snapshot.data!;
+              final profileImage = data['profileImage'] ?? '';
+              return _buildUserAvatar(context, profileImage);
+            } else {
+              return _buildDefaultAvatar(context);
+            }
+          },
         ),
-        const SizedBox(
-          width: 10,
-        ),
+        const SizedBox(width: 10),
       ],
+    );
+  }
+
+  Widget _buildLoadingTitle() {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Welcome", style: TextStyle(fontSize: 15)),
+        Text("Loading...",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+      ],
+    );
+  }
+
+  Widget _buildErrorTitle() {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Welcome", style: TextStyle(fontSize: 15)),
+        Text("Error", style: TextStyle(fontSize: 16)),
+      ],
+    );
+  }
+
+  Widget _buildUserTitle(String username) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Welcome", style: TextStyle(fontSize: 15)),
+        Text(username,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+      ],
+    );
+  }
+
+  Widget _buildDefaultTitle() {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Welcome", style: TextStyle(fontSize: 15)),
+        Text("User", style: TextStyle(fontSize: 16)),
+      ],
+    );
+  }
+
+  Widget _buildLoadingAvatar(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _navigateToProfile(context),
+      child: const CircleAvatar(radius: 25),
+    );
+  }
+
+  Widget _buildErrorAvatar(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _navigateToProfile(context),
+      child: const CircleAvatar(
+        radius: 25,
+        child: Icon(EneftyIcons.user_outline),
+      ),
+    );
+  }
+
+  Widget _buildUserAvatar(BuildContext context, String profileImage) {
+    return GestureDetector(
+      onTap: () => _navigateToProfile(context),
+      child: CircleAvatar(
+        radius: 25,
+        backgroundImage:
+            profileImage.isNotEmpty ? NetworkImage(profileImage) : null,
+        child:
+            profileImage.isEmpty ? const Icon(EneftyIcons.user_outline) : null,
+      ),
+    );
+  }
+
+  Widget _buildDefaultAvatar(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _navigateToProfile(context),
+      child: const CircleAvatar(
+        radius: 25,
+        child: Icon(EneftyIcons.user_outline),
+      ),
+    );
+  }
+
+  void _navigateToProfile(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HealthProfile(),
+      ),
     );
   }
 
@@ -487,18 +601,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      //backgroundColor: Colors.blue,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 15.0),
-        child: Center(
-          child: Image.asset(
-            "assets/images/logo/purple_heart-removebg-preview.png",
-            height: 35,
-            width: 35,
-            fit: BoxFit.contain,
-          ),
-        ),
-      ),
+      automaticallyImplyLeading: false,
       actions: [
         Container(
           height: double.infinity,

@@ -1,4 +1,4 @@
-import 'package:abtms/controllers/controllers.dart';
+import 'package:abtms/widgets/my_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,9 +8,17 @@ class InitialScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PatientMonitoringAppbar(),
+      appBar: UpdatedMonitoringAppBar(),
       body: Center(
-        child: Text("Bluetooth device not connected"),
+        child: Column(
+          children: [
+            Text("Bluetooth device not connected"),
+            ElevatedButton(
+              onPressed: () {},
+              child: Text("Turn On Bluetooth"),
+            ),
+          ],
+        ),
       ),
     );
   }

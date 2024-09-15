@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:
-          const Color(0xFF3E4D99), // Change this to your preferred color
+          const Color(0xFF343F9B), // Change this to your preferred color
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

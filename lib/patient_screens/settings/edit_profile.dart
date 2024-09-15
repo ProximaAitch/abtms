@@ -1,4 +1,4 @@
-import 'package:abtms/controllers/controllers.dart';
+import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/patient_login_signup/auth_service.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:enefty_icons/enefty_icons.dart';
@@ -201,6 +201,9 @@ class _EditPatientProfileState extends State<EditPatientProfile> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         foregroundColor: const Color(0xFF3E4D99),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        shadowColor: Colors.white,
         title: const Text(
           'Edit Profile',
           style: TextStyle(fontSize: 17),

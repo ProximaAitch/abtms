@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:abtms/controllers/controllers.dart';
+import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/health_screens/health_widget.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
@@ -175,7 +175,7 @@ class _SetUpProfilePageState extends State<SetUpProfilePage> {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               shape: const CircleBorder(),
-                              backgroundColor: const Color(0xFF3E4D99),
+                              backgroundColor: const Color(0xFF343F9B),
                               foregroundColor: Colors.white,
                             ),
                             child: const Icon(Icons.camera_alt),
@@ -216,7 +216,7 @@ class _SetUpProfilePageState extends State<SetUpProfilePage> {
                           borderRadius: BorderRadius.circular(7),
                         ),
                         foregroundColor: Colors.white,
-                        backgroundColor: const Color(0xFF3E4D99),
+                        backgroundColor: const Color(0xFF343F9B),
                       ),
                       onPressed: _isLoading
                           ? null

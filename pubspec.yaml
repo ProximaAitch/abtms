@@ -48,6 +48,7 @@ dependencies:
   email_validator: ^3.0.0
   google_sign_in: ^6.2.1
   enefty_icons: ^1.0.7
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:

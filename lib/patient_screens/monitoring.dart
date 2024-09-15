@@ -1,4 +1,4 @@
-import 'package:abtms/controllers/controllers.dart';
+import 'package:abtms/widgets/my_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,16 +8,16 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:async';
 
-class PatientMonitoringPage extends StatefulWidget {
+class NewMonitoringPage extends StatefulWidget {
   final BluetoothDevice server;
 
-  const PatientMonitoringPage({super.key, required this.server});
+  const NewMonitoringPage({super.key, required this.server});
 
   @override
-  _PatientMonitoringPageState createState() => _PatientMonitoringPageState();
+  _NewMonitoringPageState createState() => _NewMonitoringPageState();
 }
 
-class _PatientMonitoringPageState extends State<PatientMonitoringPage> {
+class _NewMonitoringPageState extends State<NewMonitoringPage> {
   BluetoothConnection? connection;
   String bpm = "00"; // Default value for demonstration
   String spo2 = "00"; // Default value for demonstration
@@ -114,7 +114,7 @@ class _PatientMonitoringPageState extends State<PatientMonitoringPage> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: const PatientMonitoringAppbar(),
+      appBar: const UpdatedMonitoringAppBar(),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

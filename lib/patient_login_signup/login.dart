@@ -1,5 +1,5 @@
 import 'package:abtms/account_type.dart';
-import 'package:abtms/controllers/controllers.dart';
+import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/patient_login_signup/auth_service.dart';
 import 'package:abtms/patient_login_signup/other_info.dart';
 import 'package:abtms/patient_login_signup/patient_forgot_password.dart';
@@ -108,18 +108,19 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
       ),
       decoration: InputDecoration(
         hintText: "********",
-        hintStyle: TextStyle(color: Colors.grey[500]),
-        fillColor: Colors.grey[200],
-        filled: true,
+        hintStyle:
+            TextStyle(color: Colors.grey[500], fontWeight: FontWeight.w400),
+        // fillColor: Colors.grey[200],
+        // filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: Colors.black, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
           borderSide: BorderSide(
             color: Color(0xFF3E4D99),
-            width: 1,
+            width: 2,
           ),
         ),
         contentPadding:
@@ -204,7 +205,7 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                         },
                       ),
                     ),
-                    vSpace(height: 0.01),
+                    vSpace(height: 0.02),
                     SizedBox(
                       height: 50,
                       width: double.infinity,
@@ -214,7 +215,7 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           foregroundColor: Colors.white,
-                          backgroundColor: const Color(0xFF3E4D99),
+                          backgroundColor: const Color(0xFF343F9B),
                         ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
@@ -242,46 +243,46 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                               ),
                       ),
                     ),
-                    vSpace(height: 0.025),
-                    SizedBox(
-                      height: 50,
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          side: const BorderSide(width: 2, color: Colors.black),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          foregroundColor: Colors.black,
-                          backgroundColor: Colors.white,
-                        ),
-                        onPressed: _handleGoogleSignIn,
-                        child: _isLoading
-                            ? const SpinKitThreeBounce(
-                                color: Color(0xFF3E4D99),
-                                size: 20.0,
-                              )
-                            : Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    "assets/images/logo/google_logo-removebg-preview.png",
-                                    height: 35,
-                                    width: 35,
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  const Text(
-                                    "Continue with Google",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                      ),
-                    ),
-                    vSpace(height: 0.050),
+                    // vSpace(height: 0.025),
+                    // SizedBox(
+                    //   height: 50,
+                    //   width: double.infinity,
+                    //   child: ElevatedButton(
+                    //     style: ElevatedButton.styleFrom(
+                    //       elevation: 0,
+                    //       side: const BorderSide(width: 2, color: Colors.black),
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(10),
+                    //       ),
+                    //       foregroundColor: Colors.black,
+                    //       backgroundColor: Colors.white,
+                    //     ),
+                    //     onPressed: _handleGoogleSignIn,
+                    //     child: _isLoading
+                    //         ? const SpinKitThreeBounce(
+                    //             color: Color(0xFF3E4D99),
+                    //             size: 20.0,
+                    //           )
+                    //         : Row(
+                    //             mainAxisAlignment: MainAxisAlignment.center,
+                    //             children: [
+                    //               Image.asset(
+                    //                 "assets/images/logo/google_logo-removebg-preview.png",
+                    //                 height: 35,
+                    //                 width: 35,
+                    //               ),
+                    //               const SizedBox(
+                    //                 width: 5,
+                    //               ),
+                    //               const Text(
+                    //                 "Continue with Google",
+                    //                 style: TextStyle(fontSize: 16),
+                    //               ),
+                    //             ],
+                    //           ),
+                    //   ),
+                    // ),
+                    vSpace(height: 0.030),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -304,7 +305,7 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                         ),
                       ],
                     ),
-
+                    vSpace(height: 0.030),
                     Center(
                       child: SizedBox(
                         width: 100,
@@ -321,7 +322,7 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                                     builder: (context) =>
                                         AccountSelectionPage()));
                           },
-                          child: Text("Back"),
+                          child: Text("< Back"),
                         ),
                       ),
                     ),

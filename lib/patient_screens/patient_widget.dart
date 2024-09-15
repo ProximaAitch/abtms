@@ -1,3 +1,4 @@
+import 'package:abtms/patient_screens/new_patient_ui.dart';
 import 'package:abtms/patient_screens/history.dart';
 import 'package:abtms/patient_screens/initial_screen.dart';
 import 'package:abtms/patient_screens/monitoring.dart';
@@ -54,15 +55,21 @@ class _PatientWidgetState extends State<PatientWidget> {
   @override
   Widget build(BuildContext context) {
     final connectedScreens = _connectedDevice != null
+        // ? [
+        //     PatientMonitoringPage(
+        //         server: _connectedDevice!), // When Bluetooth is connected
+        //     const PatientHistoryPage(),
+        //     HealthTipsPage(),
+        //     const PatientSettingsPage(),
+        //   ]
         ? [
-            PatientMonitoringPage(
-                server: _connectedDevice!), // When Bluetooth is connected
+            UpdatedMonitoringPage(), // When Bluetooth is connected
             const PatientHistoryPage(),
             HealthTipsPage(),
             const PatientSettingsPage(),
           ]
         : [
-            const InitialScreen(), // When Bluetooth is not connected
+            UpdatedMonitoringPage(), // When Bluetooth is not connected
             const PatientHistoryPage(),
             HealthTipsPage(),
             const PatientSettingsPage(),
@@ -122,21 +129,7 @@ class _PatientWidgetState extends State<PatientWidget> {
         ),
       ),
       body: connectedScreens[index],
-      floatingActionButton: index == 0 && !_isConnected
-          ? FloatingActionButton(
-              backgroundColor: Colors.blue,
-              onPressed: _startDiscovery,
-              child: _isScanning
-                  ? CupertinoActivityIndicator(
-                      color: Colors.white,
-                    )
-                  : Icon(
-                      Icons.bluetooth,
-                      color: Colors.white,
-                    ),
-              tooltip: 'Scan and connect to Bluetooth device',
-            )
-          : null,
+      
     );
   }
 
