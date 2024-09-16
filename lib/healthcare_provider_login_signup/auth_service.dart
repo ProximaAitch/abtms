@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:abtms/health_screens/health_widget.dart';
 import 'package:abtms/healthcare_provider_login_signup/email_verification.dart';
-import 'package:abtms/healthcare_provider_login_signup/other_info.dart';
+import 'package:abtms/healthcare_provider_login_signup/health_other_info.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

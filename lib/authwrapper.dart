@@ -1,5 +1,8 @@
 import 'package:abtms/account_type.dart';
+import 'package:abtms/get_started/login.dart';
 import 'package:abtms/health_screens/health_widget.dart';
+import 'package:abtms/health_screens/main_provider_widget.dart';
+import 'package:abtms/patient_screens/main_patient_wrapper.dart';
 import 'package:abtms/patient_screens/patient_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -94,19 +97,19 @@ class _AuthWrapperState extends State<AuthWrapper> {
                 final role = roleSnapshot.data;
 
                 if (role == 'patient') {
-                  return PatientWidget();
+                  return MainPatientWrapper();
                 } else if (role == 'healthcare_provider') {
-                  return HealthWidget();
+                  return HealthProviderWrapper();
                 } else {
-                  return const AccountSelectionPage();
+                  return LoginPage();
                 }
               } else {
-                return const AccountSelectionPage();
+                return LoginPage();
               }
             },
           );
         } else {
-          return const AccountSelectionPage();
+          return LoginPage();
         }
       },
     );

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:abtms/patient_login_signup/email_verification.dart';
-import 'package:abtms/patient_login_signup/other_info.dart';
+import 'package:abtms/patient_login_signup/patient_other_info.dart';
 import 'package:abtms/patient_screens/patient_widget.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -341,7 +341,7 @@ class PatientAuthService {
       if (user != null && user.emailVerified) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => OtherInfoPage()),
+          MaterialPageRoute(builder: (context) => PatientOtherInfoPage()),
         );
       } else {
         Navigator.pushReplacement(

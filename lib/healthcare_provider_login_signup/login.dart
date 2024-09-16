@@ -1,5 +1,5 @@
 import 'package:abtms/health_screens/health_widget.dart';
-import 'package:abtms/healthcare_provider_login_signup/other_info.dart';
+import 'package:abtms/healthcare_provider_login_signup/health_other_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_auth/firebase_auth.dart';

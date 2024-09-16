@@ -1,4 +1,5 @@
 import 'package:abtms/account_type.dart';
+import 'package:abtms/get_started/login.dart';
 import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/health_screens/settings/health_profile.dart';
 import 'package:abtms/health_screens/settings/health_edit_profile.dart';
@@ -411,7 +412,7 @@ class HealthSettingsPage extends StatelessWidget {
                         // );
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                            builder: (context) => AccountSelectionPage(),
+                            builder: (context) => LoginPage(),
                           ),
                         );
                       });

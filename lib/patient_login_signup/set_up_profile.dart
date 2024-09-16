@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:abtms/patient_screens/main_patient_wrapper.dart';
 import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/patient_screens/patient_widget.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
@@ -225,7 +226,7 @@ class _SetUpProfilePageState extends State<SetUpProfilePage> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => PatientWidget(),
+                                  builder: (context) => MainPatientWrapper(),
                                 ),
                               );
                             },

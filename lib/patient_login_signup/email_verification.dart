@@ -1,5 +1,5 @@
 import 'package:abtms/widgets/my_widgets.dart';
-import 'package:abtms/patient_login_signup/other_info.dart';
+import 'package:abtms/patient_login_signup/patient_other_info.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +70,7 @@ class _PatientEmailVerificationState extends State<PatientEmailVerification> {
       onConfirmBtnTap: () => Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => OtherInfoPage(),
+          builder: (context) => PatientOtherInfoPage(),
         ),
       ),
     );
@@ -117,7 +117,8 @@ class _PatientEmailVerificationState extends State<PatientEmailVerification> {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => OtherInfoPage()));
+                                    builder: (context) =>
+                                        PatientOtherInfoPage()));
                           },
                           child: const Text("Next"),
                         ),

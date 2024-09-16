@@ -1,30 +1,28 @@
-import 'package:abtms/account_type.dart';
-import 'package:abtms/widgets/my_widgets.dart';
-import 'package:abtms/patient_login_signup/auth_service.dart';
-import 'package:abtms/patient_login_signup/patient_other_info.dart';
+import 'package:abtms/get_started/signup.dart';
+import 'package:abtms/health_screens/main_provider_widget.dart';
 import 'package:abtms/patient_login_signup/patient_forgot_password.dart';
-import 'package:abtms/patient_login_signup/signup.dart';
-import 'package:abtms/patient_screens/patient_widget.dart';
+import 'package:abtms/patient_screens/main_patient_wrapper.dart';
+import 'package:abtms/widgets/my_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class PatientLoginPage extends StatefulWidget {
-  PatientLoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  LoginPage({super.key});
 
   @override
-  State<PatientLoginPage> createState() => _PatientLoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _PatientLoginPageState extends State<PatientLoginPage> {
-  // final PatientAuthService _authService = PatientAuthService();
+class _LoginPageState extends State<LoginPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
 
   bool _isLoading = false;
@@ -53,49 +51,91 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
     });
   }
 
-  void _handleGoogleSignIn() async {
-    setState(() {
-      _isLoading = true;
-    });
+  Future<String?> checkUserType(String email) async {
+    try {
+      // Check in patients collection
+      var patientDoc = await _firestore
+          .collection('patients')
+          .where('email', isEqualTo: email)
+          .get();
+      if (patientDoc.docs.isNotEmpty) {
+        return 'patient';
+      }
 
-    // // // User? user = await _authService.signInWithGoogle();
-    // // if (user != null) {
-    // //   final DocumentSnapshot userDoc =
-    // //       await _firestore.collection('patients').doc(user.uid).get();
+      // Check in healthcare_providers collection
+      var providerDoc = await _firestore
+          .collection('healthcare_providers')
+          .where('email', isEqualTo: email)
+          .get();
+      if (providerDoc.docs.isNotEmpty) {
+        return 'healthcare_providers';
+      }
 
-    // //   final Map<String, dynamic>? userData =
-    // //       userDoc.data() as Map<String, dynamic>?;
+      // If email is not found in either collection
+      return null;
+    } catch (e) {
+      print('Error checking user type: $e');
+      return null;
+    }
+  }
 
-    //   // Debugging log
-    //   print('User document data: $userData');
-    //   if (userDoc.exists &&
-    //       userData != null &&
-    //       userData.containsKey('address') &&
-    //       userData.containsKey('gender') &&
-    //       userData.containsKey('hCode') &&
-    //       userData.containsKey('mobileNo') &&
-    //       userData.containsKey('username')) {
-    //     // Navigate to HomeScreen
-    //     Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (context) =>
-    //               PatientWidget()), // Replace HomeScreen with your actual home screen widget
-    //     );
-    //   } else {
-    //     // Navigate to AddDetailsPage
-    //     Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(
-    //           builder: (context) =>
-    //               PatientOtherInfoPage()), // Replace AddDetailsPage with your actual add details screen widget
-    //     );
-    //   }
-    // }
+  Future<void> signIn() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
 
-    setState(() {
-      _isLoading = false;
-    });
+      try {
+        String? userType = await checkUserType(emailController.text);
+
+        if (userType == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text(
+                    'User not found. Please check your email or sign up.')),
+          );
+          return;
+        }
+
+        // Attempt to sign in
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+
+        // If sign-in is successful, navigate to the appropriate screen
+        if (userCredential.user != null) {
+          if (userType == 'patient') {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => MainPatientWrapper()));
+          } else {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => HealthProviderWrapper()));
+          }
+        }
+      } on FirebaseAuthException catch (e) {
+        String errorMessage = 'An error occurred. Please try again.';
+        if (e.code == 'user-not-found') {
+          errorMessage = 'No user found for that email.';
+        } else if (e.code == 'wrong-password') {
+          errorMessage = 'Wrong password provided for that user.';
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage)),
+        );
+      } catch (e) {
+        print(e);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('An error occurred. Please try again.')),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   Widget _passwordField(BuildContext context) {
@@ -107,27 +147,28 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
         color: Color(0xFF3E4D99),
       ),
       decoration: InputDecoration(
-        hintText: "********",
+        prefixIcon: const Icon(
+          CupertinoIcons.lock_fill,
+          color: Color(0xFF3E4D99),
+        ),
+        hintText: "Password",
         hintStyle:
             TextStyle(color: Colors.grey[500], fontWeight: FontWeight.w400),
-        // fillColor: Colors.grey[200],
-        // filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
-          borderSide: BorderSide(color: Colors.black, width: 1),
+          borderSide: const BorderSide(color: Colors.black, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Color(0xFF3E4D99),
             width: 2,
           ),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         suffixIcon: IconButton(
           icon: Icon(
-            _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+            _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
             color: Colors.grey[500],
           ),
           onPressed: _togglePasswordVisibility,
@@ -152,8 +193,11 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                   children: [
                     const Text(
                       "Welcome back!",
-                      style:
-                          TextStyle(fontSize: 27, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 27,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF3E4D99),
+                      ),
                     ),
                     vSpace(height: 0.01),
                     const Text(
@@ -174,6 +218,7 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                       hintText: "example@mail.com",
                       controller: emailController,
                       validator: validateEmail,
+                      prefixIcon: Icons.mail,
                     ),
                     vSpace(height: 0.020),
                     const Text(
@@ -185,11 +230,6 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                       ),
                     ),
                     vSpace(height: 0.005),
-                    // MyTextFormField(
-                    //   hintText: "**********",
-                    //   controller: passwordController,
-                    //   validator: validatePassword,
-                    // ),
                     _passwordField(context),
                     vSpace(height: 0.01),
                     Container(
@@ -201,13 +241,13 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      PatientForgotPassword()));
+                                      const PatientForgotPassword()));
                         },
                       ),
                     ),
                     vSpace(height: 0.02),
                     SizedBox(
-                      height: 50,
+                      height: 45,
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -222,11 +262,7 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                             setState(() {
                               _isLoading = true;
                             });
-                            // await _authService.patientsignInWithEmailPassword(
-                            //   context,
-                            //   emailController.text.trim(),
-                            //   passwordController.text.trim(),
-                            // );
+                            await signIn();
                             setState(() {
                               _isLoading = false;
                             });
@@ -243,45 +279,6 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                               ),
                       ),
                     ),
-                    // vSpace(height: 0.025),
-                    // SizedBox(
-                    //   height: 50,
-                    //   width: double.infinity,
-                    //   child: ElevatedButton(
-                    //     style: ElevatedButton.styleFrom(
-                    //       elevation: 0,
-                    //       side: const BorderSide(width: 2, color: Colors.black),
-                    //       shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(10),
-                    //       ),
-                    //       foregroundColor: Colors.black,
-                    //       backgroundColor: Colors.white,
-                    //     ),
-                    //     onPressed: _handleGoogleSignIn,
-                    //     child: _isLoading
-                    //         ? const SpinKitThreeBounce(
-                    //             color: Color(0xFF3E4D99),
-                    //             size: 20.0,
-                    //           )
-                    //         : Row(
-                    //             mainAxisAlignment: MainAxisAlignment.center,
-                    //             children: [
-                    //               Image.asset(
-                    //                 "assets/images/logo/google_logo-removebg-preview.png",
-                    //                 height: 35,
-                    //                 width: 35,
-                    //               ),
-                    //               const SizedBox(
-                    //                 width: 5,
-                    //               ),
-                    //               const Text(
-                    //                 "Continue with Google",
-                    //                 style: TextStyle(fontSize: 16),
-                    //               ),
-                    //             ],
-                    //           ),
-                    //   ),
-                    // ),
                     vSpace(height: 0.030),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -289,14 +286,13 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                         const Text("Don't have an account?"),
                         TextButton(
                           style: TextButton.styleFrom(
-                            // backgroundColor: Colors.black,
                             foregroundColor: Colors.black,
                           ),
                           onPressed: () {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => PatientSignUpPage()));
+                                    builder: (context) => SignUpPage()));
                           },
                           child: const Text(
                             "Sign Up",
@@ -304,27 +300,6 @@ class _PatientLoginPageState extends State<PatientLoginPage> {
                           ),
                         ),
                       ],
-                    ),
-                    vSpace(height: 0.030),
-                    Center(
-                      child: SizedBox(
-                        width: 100,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            foregroundColor: Colors.white,
-                          ),
-                          onPressed: () {
-                            // Navigator.of(context).pop();
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        AccountSelectionPage()));
-                          },
-                          child: Text("< Back"),
-                        ),
-                      ),
                     ),
                   ],
                 ),

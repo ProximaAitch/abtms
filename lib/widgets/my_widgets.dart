@@ -67,11 +67,13 @@ class MyTextFormField extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final String? Function(String?)? validator;
+  final IconData? prefixIcon; // Added to allow prefix icon
 
   MyTextFormField({
     required this.hintText,
     required this.controller,
     this.validator,
+    this.prefixIcon, // Accept prefix icon as an optional parameter
   });
 
   @override
@@ -85,8 +87,6 @@ class MyTextFormField extends StatelessWidget {
         hintText: hintText,
         hintStyle:
             TextStyle(color: Colors.grey[500], fontWeight: FontWeight.w400),
-        // fillColor: Colors.grey[200],
-        // filled: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
           borderSide: BorderSide(color: Colors.black, width: 1),
@@ -98,8 +98,13 @@ class MyTextFormField extends StatelessWidget {
             width: 2,
           ),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        prefixIcon: prefixIcon != null
+            ? Icon(
+                prefixIcon,
+                color: Color(0xFF3E4D99),
+              )
+            : null, // Add prefixIcon only if it's provided
       ),
       validator: validator,
     );

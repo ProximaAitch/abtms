@@ -1,17 +1,54 @@
 import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/patient_login_signup/auth_service.dart';
 import 'package:abtms/patient_login_signup/set_up_profile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class OtherInfoPage extends StatefulWidget {
-  OtherInfoPage({super.key});
+class PatientAuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  @override
-  State<OtherInfoPage> createState() => _OtherInfoPageState();
+  // ... other methods ...
+
+  Future<bool> patientAddInfo({
+    required String hCode,
+    required String gender,
+    required String mobileNo,
+    required String address,
+    required BuildContext context,
+  }) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        await _firestore.collection('patients').doc(user.uid).set({
+          'hCode': hCode,
+          'gender': gender,
+          'mobileNo': mobileNo,
+          'address': address,
+        }, SetOptions(merge: true));
+        return true;
+      }
+      return false;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error adding info: $e')),
+      );
+      return false;
+    }
+  }
+
 }
 
-class _OtherInfoPageState extends State<OtherInfoPage> {
+class PatientOtherInfoPage extends StatefulWidget {
+  PatientOtherInfoPage({Key? key}) : super(key: key);
+
+  @override
+  State<PatientOtherInfoPage> createState() => _PatientOtherInfoPageState();
+}
+
+class _PatientOtherInfoPageState extends State<PatientOtherInfoPage> {
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController hCodeController = TextEditingController();
@@ -26,8 +63,9 @@ class _OtherInfoPageState extends State<OtherInfoPage> {
 
   String? validateHCode(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter your healthcare provider\'s code';
+      return 'Please enter the Healthcare Provider\'s Code';
     }
+    // Add any additional validation for hCode if needed
     return null;
   }
 
@@ -72,8 +110,7 @@ class _OtherInfoPageState extends State<OtherInfoPage> {
                   children: [
                     const Text(
                       "Personal Details",
-                      style:
-                          TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+                      style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
                     ),
                     vSpace(height: 0.01),
                     const Text(
@@ -90,33 +127,35 @@ class _OtherInfoPageState extends State<OtherInfoPage> {
                       ),
                     ),
                     vSpace(height: 0.005),
-                    MyTextFormField(
-                      hintText: "eg.AB1234",
-                      controller: hCodeController,
+                    TextFormField(
+                      style: const TextStyle(color: Color(0xFF3E4D99), fontSize: 16),
                       validator: validateHCode,
-                    ),
-                    vSpace(height: 0.020),
-                    const Text(
-                      "Gender",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Color(0xFF3E4D99),
-                        fontWeight: FontWeight.w500,
+                      controller: hCodeController,
+                      decoration: InputDecoration(
+                        hintText: "Enter Healthcare Provider's Code",
+                        hintStyle: TextStyle(color: Colors.grey[500]),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7.0),
+                          borderSide: const BorderSide(
+                            width: 2,
+                            color: Color(0xFF3E4D99),
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                       ),
                     ),
-                    vSpace(height: 0.005),
+                    vSpace(height: 0.020),
                     DropdownButtonFormField<String>(
-                      style: const TextStyle(
-                          color: Color(0xFF3E4D99), fontSize: 17),
+                      style: const TextStyle(color: Color(0xFF3E4D99), fontSize: 17),
                       value: _selectedGender,
                       validator: validateGender,
                       decoration: InputDecoration(
-                        // fillColor: Colors.grey[200],
-                        // filled: true,
                         hintText: 'Select your gender',
-                        hintStyle: TextStyle(
-                            color: Colors.grey[500],
-                            fontWeight: FontWeight.w400),
+                        hintStyle: TextStyle(color: Colors.grey[500], fontWeight: FontWeight.w400),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(7),
                           borderSide: BorderSide.none,
@@ -128,8 +167,7 @@ class _OtherInfoPageState extends State<OtherInfoPage> {
                             color: Color(0xFF3E4D99),
                           ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 14),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                       ),
                       items: ['Male', 'Female']
                           .map((gender) => DropdownMenuItem<String>(
@@ -144,25 +182,13 @@ class _OtherInfoPageState extends State<OtherInfoPage> {
                       },
                     ),
                     vSpace(height: 0.020),
-                    const Text(
-                      "Mobile No.",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Color(0xFF3E4D99),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    vSpace(height: 0.01),
                     TextFormField(
-                      style: const TextStyle(
-                          color: Color(0xFF3E4D99), fontSize: 16),
+                      style: const TextStyle(color: Color(0xFF3E4D99), fontSize: 16),
                       maxLength: 10,
                       keyboardType: TextInputType.number,
                       validator: validateMobileNo,
                       controller: mobileNoController,
                       decoration: InputDecoration(
-                        // fillColor: Colors.grey[200],
-                        // filled: true,
                         hintText: "0xxxxxxxxx",
                         hintStyle: TextStyle(color: Colors.grey[500]),
                         border: OutlineInputBorder(
@@ -176,20 +202,10 @@ class _OtherInfoPageState extends State<OtherInfoPage> {
                             color: Color(0xFF3E4D99),
                           ),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 14),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
                       ),
                     ),
                     vSpace(height: 0.020),
-                    const Text(
-                      "Address",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Color(0xFF3E4D99),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    vSpace(height: 0.01),
                     MyTextFormField(
                       hintText: "City, Street",
                       controller: addressController,
@@ -213,9 +229,8 @@ class _OtherInfoPageState extends State<OtherInfoPage> {
                               _isLoading = true;
                             });
 
-                            // Call addInfo to add the information to Firestore
-                            bool isSuccessful =
-                                await _authService.patientAddInfo(
+                            // Call patientAddInfo to add the information to Firestore
+                            bool isSuccessful = await _authService.patientAddInfo(
                               hCode: hCodeController.text.trim(),
                               gender: _selectedGender!,
                               mobileNo: mobileNoController.text.trim(),
@@ -227,12 +242,12 @@ class _OtherInfoPageState extends State<OtherInfoPage> {
                               _isLoading = false;
                             });
 
-                            // Only navigate if the information was added successfully
                             if (isSuccessful) {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SetUpProfilePage()),
+                                  builder: (context) => SetUpProfilePage(),
+                                ),
                               );
                             }
                           }
