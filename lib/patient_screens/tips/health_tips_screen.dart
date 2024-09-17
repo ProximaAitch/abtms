@@ -81,7 +81,7 @@ class HealthTipsPage extends StatelessWidget {
               ),
               SizedBox(height: screenHeight * 0.03),
               SizedBox(
-                height: screenHeight * 0.4,
+                height: screenHeight * 0.43,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [

@@ -49,6 +49,7 @@ dependencies:
   google_sign_in: ^6.2.1
   enefty_icons: ^1.0.7
   intl: ^0.18.1
+  lottie: ^3.1.2
 
 dev_dependencies:
   flutter_test:

@@ -1,17 +1,14 @@
-import 'package:abtms/account_type.dart';
+import 'package:abtms/get_started/login.dart';
 import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/patient_login_signup/auth_service.dart';
-import 'package:abtms/patient_login_signup/login.dart';
 import 'package:abtms/patient_screens/settings/change_password.dart';
 import 'package:abtms/patient_screens/settings/edit_profile.dart';
 import 'package:abtms/patient_screens/settings/profile.dart';
-import 'package:abtms/test/device_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
@@ -322,59 +319,6 @@ class PatientSettingsPage extends StatelessWidget {
                 ),
               ),
               vSpace(height: 0.01),
-              // GestureDetector(
-              //   onTap: () {
-              //     Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //         builder: (context) => DeviceListScreen(),
-              //       ),
-              //     );
-              //   },
-              //   child: Container(
-              //     padding:
-              //         const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
-              //     width: double.infinity,
-              //     height: 65,
-              //     child: Row(
-              //       children: [
-              //         CircleAvatar(
-              //           backgroundColor: Colors.blue[50],
-              //           foregroundColor: Colors.blue,
-              //           radius: 25,
-              //           child: const Icon(
-              //             CupertinoIcons.bluetooth,
-              //             size: 25,
-              //           ),
-              //         ),
-              //         const SizedBox(
-              //           width: 10,
-              //         ),
-              //         const Column(
-              //           mainAxisAlignment: MainAxisAlignment.center,
-              //           crossAxisAlignment: CrossAxisAlignment.start,
-              //           children: [
-              //             Text(
-              //               "Bluetooth",
-              //               style: TextStyle(
-              //                 fontSize: 15,
-              //                 fontWeight: FontWeight.w500,
-              //               ),
-              //             ),
-              //             Text(
-              //               "Connect to bluetooth device",
-              //               style: TextStyle(
-              //                 fontSize: 13,
-              //                 color: Color(0xFF676767),
-              //               ),
-              //             ),
-              //           ],
-              //         )
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              // vSpace(height: 0.01),
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
                 width: double.infinity,
@@ -474,15 +418,10 @@ class PatientSettingsPage extends StatelessWidget {
                             PatientAuthService();
                         await authService.signOut(context);
                         Navigator.of(context).pop();
-                        // Navigator.pushReplacement(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => AccountSelectionPage(),
-                        //   ),
-                        // );
+
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                            builder: (context) => const AccountSelectionPage(),
+                            builder: (context) => LoginPage(),
                           ),
                         );
                       });

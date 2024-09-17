@@ -234,8 +234,8 @@ class PatientAuthService {
         ..hideCurrentSnackBar()
         ..showSnackBar(snackBar);
 
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => PatientWidget()));
+      // Navigator.pushReplacement(
+      //     context, MaterialPageRoute(builder: (context) => PatientWidget()));
     } on FirebaseAuthException catch (e) {
       String errorMessage;
       if (e.code == 'user-not-found') {
