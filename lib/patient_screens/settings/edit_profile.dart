@@ -337,6 +337,11 @@ class _EditPatientProfileState extends State<EditPatientProfile> {
                   ),
                   DropdownButtonFormField<String>(
                     borderRadius: BorderRadius.circular(50.0),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontFamily: "Poppins",
+                      color: Colors.black,
+                    ),
                     decoration: InputDecoration(
                       fillColor: Color.fromARGB(255, 244, 244, 255),
                       filled: true,

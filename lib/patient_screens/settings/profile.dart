@@ -70,18 +70,6 @@ class PatientProfilePage extends StatelessWidget {
           },
           icon: const Icon(CupertinoIcons.back),
         ),
-        // actions: [
-        //   TextButton(
-        //     onPressed: () {},
-        //     child: const Text(
-        //       "Edit",
-        //       style: TextStyle(
-        //           color: Color(0xFF3E4D99),
-        //           fontWeight: FontWeight.w600,
-        //           fontSize: 16),
-        //     ),
-        //   ),
-        // ],
       ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: fetchUserData(),
@@ -110,6 +98,7 @@ class PatientProfilePage extends StatelessWidget {
             final gender = userData['gender'] ?? 'Gender';
             final address = userData['address'] ?? 'Address';
             final mobileNo = userData['mobileNo'] ?? 'Mobile No';
+            final dateOfBirth = userData['dateOfBirth'] ?? 'Date of Birth';
 
             final providerName =
                 healthcareProviderData['fullName'] ?? 'Provider Name';
@@ -219,6 +208,7 @@ class PatientProfilePage extends StatelessWidget {
                         _buildInfoRow("Full Name", fullname),
                         _buildInfoRow("Health Code", hcode),
                         _buildInfoRow("Gender", gender),
+                        _buildInfoRow("Date Of Birth", dateOfBirth),
                         _buildInfoRow("Email", email),
                         _buildInfoRow("Mobile No", mobileNo),
                         _buildInfoRow("Address", address),

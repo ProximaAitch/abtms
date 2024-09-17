@@ -367,31 +367,21 @@ class UpdatedMonitoringAppBar extends StatelessWidget
           } else if (snapshot.hasData) {
             final data = snapshot.data!;
             final username = data['username'] ?? 'User';
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PatientProfilePage(),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Welcome",
+                  style: TextStyle(
+                    fontSize: 15,
                   ),
-                );
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Welcome",
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                  ),
-                  Text(
-                    username,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
+                ),
+                Text(
+                  username,
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ],
             );
           } else {
             return const Column(
@@ -412,22 +402,33 @@ class UpdatedMonitoringAppBar extends StatelessWidget
               final data = snapshot.data!;
               final profileImage = data['profileImage'] ?? '';
 
-              return Row(
-                children: [
-                  CircleAvatar(
-                    radius: 25,
-                    backgroundColor: const Color.fromARGB(255, 244, 244, 255),
-                    backgroundImage: profileImage.isNotEmpty
-                        ? NetworkImage(profileImage)
-                        : null,
-                    child: profileImage.isEmpty
-                        ? const Icon(
-                            Icons.person_outline,
-                          )
-                        : null,
-                  ),
-                  const SizedBox(width: 10),
-                ],
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PatientProfilePage(),
+                    ),
+                  );
+                },
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundColor: Colors.blue,
+                      backgroundImage: profileImage.isNotEmpty
+                          ? NetworkImage(profileImage)
+                          : null,
+                      child: profileImage.isEmpty
+                          ? const Icon(
+                              EneftyIcons.user_outline,
+                              color: Colors.white,
+                            )
+                          : null,
+                    ),
+                    const SizedBox(width: 10),
+                  ],
+                ),
               );
             } else {
               return const SizedBox();

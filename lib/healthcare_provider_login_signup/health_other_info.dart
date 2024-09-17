@@ -97,8 +97,6 @@ class _HealthOtherInfoPageState extends State<HealthOtherInfoPage> {
                       value: _selectedGender,
                       validator: validateGender,
                       decoration: InputDecoration(
-                        // fillColor: Colors.grey[200],
-                        // filled: true,
                         hintText: 'Select your gender',
                         hintStyle: TextStyle(
                             color: Colors.grey[500],
@@ -128,12 +126,7 @@ class _HealthOtherInfoPageState extends State<HealthOtherInfoPage> {
                           _selectedGender = value;
                         });
                       },
-                      // validator: (value) {
-                      //   if (value == null || value.isEmpty) {
-                      //     return 'Please select a gender';
-                      //   }
-                      //   return null;
-                      // },
+                      
                     ),
                     vSpace(height: 0.020),
                     const Text(
@@ -152,8 +145,6 @@ class _HealthOtherInfoPageState extends State<HealthOtherInfoPage> {
                       validator: validateMobileNo,
                       controller: mobileNoController,
                       decoration: InputDecoration(
-                        // fillColor: Colors.grey[200],
-                        // filled: true,
                         hintText: "0xxxxxxxxx",
                         hintStyle: TextStyle(
                             color: Colors.grey[500],

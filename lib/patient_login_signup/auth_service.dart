@@ -68,83 +68,59 @@ class PatientAuthService {
   }
 
   Future<bool> patientAddInfo({
-    required String hCode,
-    required String gender,
-    required String mobileNo,
-    required String address,
-    required BuildContext context,
-  }) async {
-    try {
-      // Get the current user
-      User? user = _auth.currentUser;
+  required String dateOfBirth,
+  required String gender,
+  required String mobileNo,
+  required String address,
+  required BuildContext context,
+}) async {
+  try {
+    // Get the current user
+    User? user = _auth.currentUser;
 
-      if (user == null) {
-        throw FirebaseAuthException(
-          code: 'no-user',
-          message: 'No user is currently signed in.',
-        );
-      }
-
-      // Check if the hCode exists in the healthcare_providers collection
-      final QuerySnapshot healthcareProviderSnapshot = await _firestore
-          .collection('healthcare_providers')
-          .where('hCode', isEqualTo: hCode)
-          .get();
-
-      if (healthcareProviderSnapshot.docs.isEmpty) {
-        // If no matching hCode is found, show a snackbar and return false
-        final snackBar = SnackBar(
-          elevation: 0,
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.transparent,
-          content: AwesomeSnackbarContent(
-            title: 'Ooops!',
-            message: 'hCode provided is incorrect',
-            contentType: ContentType.failure,
-          ),
-        );
-
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-        return false;
-      }
-
-      // Add additional information to Firestore using set() with merge: true
-      await _firestore.collection('patients').doc(user.uid).set({
-        'hCode': hCode,
-        'gender': gender,
-        'mobileNo': mobileNo,
-        'address': address,
-      }, SetOptions(merge: true));
-
-      // Show a success message
-      final snackBar = SnackBar(
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.transparent,
-        content: AwesomeSnackbarContent(
-          title: 'Yay!',
-          message: 'Patient details added successfully',
-          contentType: ContentType.success,
-        ),
+    if (user == null) {
+      throw FirebaseAuthException(
+        code: 'no-user',
+        message: 'No user is currently signed in.',
       );
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
-      return true; // Indicate success
-    } on FirebaseException catch (e) {
-      print(e);
-      // Handle any errors
-      final snackBar = SnackBar(
-        content: Text('Failed to add information: ${e.message}'),
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      return false; // Indicate failure
     }
+
+    // Add additional information to Firestore using set() with merge: true
+    await _firestore.collection('patients').doc(user.uid).set({
+      'dateOfBirth': dateOfBirth,
+      'gender': gender,
+      'mobileNo': mobileNo,
+      'address': address,
+    }, SetOptions(merge: true));
+
+    // Show a success message
+    final snackBar = SnackBar(
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Yay!',
+        message: 'Patient details added successfully',
+        contentType: ContentType.success,
+      ),
+    );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+    return true; // Indicate success
+  } on FirebaseException catch (e) {
+    print(e);
+    // Handle any errors
+    final snackBar = SnackBar(
+      content: Text('Failed to add information: ${e.message}'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    return false; // Indicate failure
   }
+}
+
 
   Future<User?> signInWithGoogle() async {
     try {

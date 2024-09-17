@@ -34,12 +34,19 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isLoading = false;
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
-  String _selectedUserType = 'patient';
+  String _selectedUserType = 'patients';
 
   @override
   void initState() {
     super.initState();
     hCodeController.text = '';
+  }
+
+  void _sendVerificationEmail() async {
+    User? user = _auth.currentUser;
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+    }
   }
 
   void _togglePasswordVisibility() {
@@ -98,7 +105,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   String? validateHCode(String? value) {
-    if (_selectedUserType == 'patient') {
+    if (_selectedUserType == 'patients') {
       if (value == null || value.isEmpty) {
         return 'hCode is required for patients';
       }
@@ -218,7 +225,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
       try {
         // Validate hCode for patients
-        if (_selectedUserType == 'patient') {
+        if (_selectedUserType == 'patients') {
           bool isValid = await isHCodeValid(hCodeController.text);
           if (!isValid) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -260,6 +267,8 @@ class _SignUpPageState extends State<SignUpPage> {
             .set(userData);
 
         // Navigate to appropriate screen
+        _sendVerificationEmail();
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -312,7 +321,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       hint: const Text("Select Account Type"),
                       items: const [
                         DropdownMenuItem(
-                            value: 'patient', child: Text('Patient')),
+                            value: 'patients', child: Text('Patient')),
                         DropdownMenuItem(
                             value: 'healthcare_providers',
                             child: Text('Healthcare Provider')),
@@ -356,7 +365,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     _passwordField(context),
                     vSpace(height: 0.020),
                     _confirmPasswordField(context),
-                    if (_selectedUserType == 'patient') ...[
+                    if (_selectedUserType == 'patients') ...[
                       vSpace(height: 0.020),
                       MyTextFormField(
                         hintText: "Healthcare Provider Code",
