@@ -1,14 +1,14 @@
 import 'package:abtms/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
 
-class PatientHistoryPage extends StatefulWidget {
-  const PatientHistoryPage({super.key});
+class MyHealthHistoryPage extends StatefulWidget {
+  const MyHealthHistoryPage({super.key});
 
   @override
-  State<PatientHistoryPage> createState() => _PatientHistoryPageState();
+  State<MyHealthHistoryPage> createState() => _MyHealthHistoryPageState();
 }
 
-class _PatientHistoryPageState extends State<PatientHistoryPage>
+class _MyHealthHistoryPageState extends State<MyHealthHistoryPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 

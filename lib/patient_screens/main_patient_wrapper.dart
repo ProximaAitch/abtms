@@ -29,7 +29,7 @@ class _MainPatientWrapperState extends State<MainPatientWrapper> {
     screens = [
       bluetoothPage,
       HealthTipsPage(),
-      PatientHistoryPage(),
+      MyHealthHistoryPage(),
       PatientSettingsPage(),
     ];
   }
@@ -49,7 +49,7 @@ class _MainPatientWrapperState extends State<MainPatientWrapper> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey[500],
+        unselectedItemColor: Colors.grey[600],
         showUnselectedLabels: true,
         selectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
         currentIndex: index,

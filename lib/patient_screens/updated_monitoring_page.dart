@@ -24,8 +24,7 @@ class UpdatedMonitoringPage extends StatefulWidget {
 class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
   BluetoothConnection? _connection;
 
-
-void initState() {
+  void initState() {
     super.initState();
     _startListening();
   }
@@ -82,96 +81,17 @@ void initState() {
     }
   }
 
-
-  // void initState() {
-  //   super.initState();
-  //   if (widget.connection != null) {
-  //     _startListening();
-  //   } else {
-  //     // Handle the case where connection is null
-  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('No active connection')),
-  //       );
-  //       Navigator.pop(context); // Return to the previous screen
-  //     });
-  //   }
-  // }
-
-  // void _startListening() {
-  //   widget.connection?.input?.listen((data) {
-  //     // Handle incoming data
-  //     String incomingMessage = ascii.decode(data);
-  //     print('Data incoming: $incomingMessage');
-  //     // TODO: Parse the incoming message and update the UI
-  //   })?.onDone(() {
-  //     // Handle connection lost
-  //     print('Disconnected by remote request');
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Device disconnected')),
-  //     );
-  //     Navigator.pushReplacement(
-  //         context,
-  //         MaterialPageRoute(
-  //             builder: (context) =>
-  //                 MainPatientWrapper())); // Return to the previous screen
-  //   });
-  // }
-
-  // void _sendMessage(String message) async {
-  //   if (widget.connection == null) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('No active connection')),
-  //     );
-  //     return;
-  //   }
-
-  //   try {
-  //     widget.connection!.output.add(utf8.encode(message + "\r\n"));
-  //     await widget.connection!.output.allSent;
-  //     print('Message sent: $message');
-  //   } catch (e) {
-  //     print('Error sending message: $e');
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Failed to send message: $e')),
-  //     );
-  //   }
-  // }
-
-  // void _disconnect() async {
-  //   if (widget.connection == null) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('No active connection')),
-  //     );
-  //     return;
-  //   }
-
-  //   try {
-  //     await widget.connection!.close();
-  //     print('Disconnected');
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Device disconnected')),
-  //     );
-  //     Navigator.pop(context); // Return to the previous screen
-  //   } catch (e) {
-  //     print('Error disconnecting: $e');
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Failed to disconnect: $e')),
-  //     );
-  //   }
-  // }
-
   @override
   void dispose() {
     _connection?.dispose();
     super.dispose();
   }
 
-  String heartrate = "72";
+  String heartrate = "00";
 
-  String temp = "32";
+  String temp = "00";
 
-  String spo2 = "95";
+  String spo2 = "00";
 
   @override
   Widget build(BuildContext context) {
@@ -180,7 +100,8 @@ void initState() {
     return WillPopScope(
       onWillPop: () async {
         _disconnect();
-        return false;},
+        return false;
+      },
       child: Scaffold(
         backgroundColor: const Color(0xFFf2f3f5),
         appBar: const UpdatedMonitoringAppBar(),
@@ -450,7 +371,8 @@ void initState() {
                           Text(
                             "Normal",
                             style: TextStyle(
-                                fontWeight: FontWeight.w600, color: Colors.green),
+                                fontWeight: FontWeight.w600,
+                                color: Colors.green),
                           ),
                         ],
                       ),
@@ -463,7 +385,8 @@ void initState() {
                           Text(
                             "Normal",
                             style: TextStyle(
-                                fontWeight: FontWeight.w600, color: Colors.green),
+                                fontWeight: FontWeight.w600,
+                                color: Colors.green),
                           ),
                         ],
                       ),
@@ -476,7 +399,8 @@ void initState() {
                           Text(
                             "Normal",
                             style: TextStyle(
-                                fontWeight: FontWeight.w600, color: Colors.green),
+                                fontWeight: FontWeight.w600,
+                                color: Colors.green),
                           ),
                         ],
                       ),

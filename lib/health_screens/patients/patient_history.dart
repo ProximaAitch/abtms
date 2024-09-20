@@ -46,7 +46,7 @@ class PatientHistoryPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PatientDetailsPage(),
+                        builder: (context) => PatientDetailsPage(patientData: patientData),
                       ),
                     );
                   },

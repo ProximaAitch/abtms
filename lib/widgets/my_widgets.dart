@@ -89,7 +89,8 @@ class MyTextFormField extends StatelessWidget {
             TextStyle(color: Colors.grey[500], fontWeight: FontWeight.w400),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
-          borderSide: BorderSide(color: Colors.black, width: 1),
+          borderSide: const BorderSide(
+              color: Color.fromARGB(255, 132, 132, 132), width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
@@ -567,6 +568,8 @@ class HealthMonitoringAppbar extends StatelessWidget
     return GestureDetector(
       onTap: () => _navigateToProfile(context),
       child: CircleAvatar(
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
         radius: 25,
         backgroundImage:
             profileImage.isNotEmpty ? NetworkImage(profileImage) : null,

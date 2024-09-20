@@ -1,5 +1,6 @@
-import 'package:abtms/account_type.dart';
+import 'package:abtms/get_started/about.dart';
 import 'package:abtms/get_started/login.dart';
+import 'package:abtms/health_screens/settings/health_change_password.dart';
 import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/health_screens/settings/health_profile.dart';
 import 'package:abtms/health_screens/settings/health_edit_profile.dart';
@@ -9,11 +10,17 @@ import 'package:enefty_icons/enefty_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:share/share.dart';
 
 class HealthSettingsPage extends StatelessWidget {
   const HealthSettingsPage({super.key});
+
+  final String appLink =
+      "https://drive.google.com/drive/folders/1I8ipu0JQyxohp8IlGkGFtgpMpFRx5AdW?usp=drive_link";
+  final String appName = "abtms";
 
   Future<Map<String, dynamic>> fetchUserData() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -27,6 +34,13 @@ class HealthSettingsPage extends StatelessWidget {
       }
     }
     return {};
+  }
+
+  void _shareAppLink(BuildContext context) {
+    Share.share(
+      "Check out $appName: $appLink",
+      subject: "Share $appName",
+    );
   }
 
   @override
@@ -52,10 +66,12 @@ class HealthSettingsPage extends StatelessWidget {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const CircleAvatar(
-                              backgroundColor: Colors.black,
+                              backgroundColor:
+                                  const Color.fromARGB(255, 243, 245, 255),
+                              foregroundColor: const Color(0xFF343F9B),
                               radius: 50,
                               child: CupertinoActivityIndicator(
-                                color: Colors.white,
+                                color: const Color(0xFF343F9B),
                               ),
                             );
                           } else if (snapshot.hasError) {
@@ -67,18 +83,25 @@ class HealthSettingsPage extends StatelessWidget {
                             final data = snapshot.data!;
                             final profileImage = data['profileImage'] ?? '';
                             return CircleAvatar(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 243, 245, 255),
+                              foregroundColor: const Color(0xFF343F9B),
                               radius: 50,
                               backgroundImage: profileImage.isNotEmpty
                                   ? NetworkImage(profileImage)
                                   : null,
                               child: profileImage.isEmpty
-                                  ? const Icon(CupertinoIcons.person, size: 50)
+                                  ? const Icon(EneftyIcons.user_outline,
+                                      size: 50)
                                   : null,
                             );
                           } else {
-                            return const CircleAvatar(
+                            return CircleAvatar(
                               radius: 50,
-                              child: Icon(CupertinoIcons.person),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 243, 245, 255),
+                              foregroundColor: const Color(0xFF343F9B),
+                              child: Icon(EneftyIcons.user_outline, size: 50),
                             );
                           }
                         },
@@ -226,7 +249,7 @@ class HealthSettingsPage extends StatelessWidget {
                         backgroundColor: Color.fromRGBO(227, 242, 253, 1),
                         foregroundColor: Colors.blue,
                         radius: 25,
-                        child: const Icon(
+                        child: Icon(
                           CupertinoIcons.person_fill,
                           size: 25,
                         ),
@@ -260,7 +283,10 @@ class HealthSettingsPage extends StatelessWidget {
               ),
               vSpace(height: 0.01),
               GestureDetector(
-                onTap: () {},
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HealthChangePassword())),
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
@@ -305,87 +331,96 @@ class HealthSettingsPage extends StatelessWidget {
                 ),
               ),
               vSpace(height: 0.01),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
-                width: double.infinity,
-                height: 65,
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.purple[50],
-                      foregroundColor: Colors.purple,
-                      radius: 25,
-                      child: const Icon(
-                        EneftyIcons.share_outline,
-                        size: 25,
+              GestureDetector(
+                onTap: () => _shareAppLink(context),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+                  width: double.infinity,
+                  height: 65,
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.purple[50],
+                        foregroundColor: Colors.purple,
+                        radius: 25,
+                        child: const Icon(
+                          EneftyIcons.share_outline,
+                          size: 25,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Share",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Share",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "Share this app with others.",
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Color(0xFF676767),
+                          Text(
+                            "Share this app with others.",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF676767),
+                            ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
               vSpace(height: 0.01),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
-                width: double.infinity,
-                height: 65,
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.teal[50],
-                      foregroundColor: Colors.teal,
-                      radius: 25,
-                      child: const Icon(
-                        EneftyIcons.info_circle_outline,
-                        size: 25,
+              GestureDetector(
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AboutPage())),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+                  width: double.infinity,
+                  height: 65,
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.teal[50],
+                        foregroundColor: Colors.teal,
+                        radius: 25,
+                        child: const Icon(
+                          EneftyIcons.info_circle_outline,
+                          size: 25,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "About",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "About",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "Learn about the app",
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Color(0xFF676767),
+                          Text(
+                            "Learn about the app",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF676767),
+                            ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
               vSpace(height: 0.01),
@@ -404,12 +439,7 @@ class HealthSettingsPage extends StatelessWidget {
                             HealthAuthService();
                         await authService.signOut(context);
                         Navigator.of(context).pop();
-                        // Navigator.pushReplacement(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => AccountSelectionPage(),
-                        //   ),
-                        // );
+
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder: (context) => LoginPage(),

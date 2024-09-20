@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:abtms/get_started/signup.dart';
 import 'package:abtms/health_screens/main_provider_widget.dart';
 import 'package:abtms/patient_login_signup/patient_forgot_password.dart';
@@ -125,6 +128,16 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(errorMessage)),
         );
+      } on SocketException catch (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('No internet connection. Please try again.')),
+        );
+      } on TimeoutException catch (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Connection timed out. Please try again.')),
+        );
       } catch (e) {
         print(e);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -156,7 +169,8 @@ class _LoginPageState extends State<LoginPage> {
             TextStyle(color: Colors.grey[500], fontWeight: FontWeight.w400),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),
-          borderSide: const BorderSide(color: Colors.black, width: 1),
+          borderSide: const BorderSide(
+              color: Color.fromARGB(255, 132, 132, 132), width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.0),

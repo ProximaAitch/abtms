@@ -1,3 +1,4 @@
+import 'package:abtms/get_started/about.dart';
 import 'package:abtms/get_started/login.dart';
 import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/patient_login_signup/auth_service.dart';
@@ -11,9 +12,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:share/share.dart';
 
 class PatientSettingsPage extends StatelessWidget {
   const PatientSettingsPage({super.key});
+
+  final String appLink =
+      "https://drive.google.com/drive/folders/1I8ipu0JQyxohp8IlGkGFtgpMpFRx5AdW?usp=drive_link";
+  final String appName = "abtms";
 
   Future<Map<String, dynamic>> fetchUserData() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -27,6 +33,13 @@ class PatientSettingsPage extends StatelessWidget {
       }
     }
     return {};
+  }
+
+  void _shareAppLink(BuildContext context) {
+    Share.share(
+      "Check out $appName: $appLink",
+      subject: "Share $appName",
+    );
   }
 
   @override
@@ -53,8 +66,8 @@ class PatientSettingsPage extends StatelessWidget {
                               ConnectionState.waiting) {
                             return const CircleAvatar(
                               backgroundColor:
-                                  Color.fromARGB(255, 244, 244, 255),
-                              foregroundColor: const Color(0xFF3E4D99),
+                                  const Color.fromARGB(255, 243, 245, 255),
+                              foregroundColor: const Color(0xFF343F9B),
                               radius: 50,
                               child: CupertinoActivityIndicator(
                                 color: Colors.white,
@@ -63,8 +76,8 @@ class PatientSettingsPage extends StatelessWidget {
                           } else if (snapshot.hasError) {
                             return const CircleAvatar(
                               backgroundColor:
-                                  Color.fromARGB(255, 244, 244, 255),
-                              foregroundColor: const Color(0xFF3E4D99),
+                                  const Color.fromARGB(255, 243, 245, 255),
+                              foregroundColor: const Color(0xFF343F9B),
                               radius: 50,
                               child: Icon(EneftyIcons.user_outline, size: 50),
                             );
@@ -73,8 +86,8 @@ class PatientSettingsPage extends StatelessWidget {
                             final profileImage = data['profileImage'] ?? '';
                             return CircleAvatar(
                               backgroundColor:
-                                  Color.fromARGB(255, 244, 244, 255),
-                              foregroundColor: const Color(0xFF3E4D99),
+                                  const Color.fromARGB(255, 243, 245, 255),
+                              foregroundColor: const Color(0xFF343F9B),
                               radius: 50,
                               backgroundImage: profileImage.isNotEmpty
                                   ? NetworkImage(profileImage)
@@ -86,6 +99,9 @@ class PatientSettingsPage extends StatelessWidget {
                             );
                           } else {
                             return const CircleAvatar(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 243, 245, 255),
+                              foregroundColor: const Color(0xFF343F9B),
                               radius: 50,
                               child: Icon(EneftyIcons.user_outline, size: 50),
                             );
@@ -212,7 +228,8 @@ class PatientSettingsPage extends StatelessWidget {
               ),
               vSpace(height: 0.015),
               Divider(
-                color: Color.fromARGB(255, 221, 221, 255),
+                height: 1,
+                color: Colors.grey[200],
               ),
               vSpace(height: 0.015),
               GestureDetector(
@@ -319,87 +336,96 @@ class PatientSettingsPage extends StatelessWidget {
                 ),
               ),
               vSpace(height: 0.01),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
-                width: double.infinity,
-                height: 65,
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.purple[50],
-                      foregroundColor: Colors.purple,
-                      radius: 25,
-                      child: const Icon(
-                        EneftyIcons.share_outline,
-                        size: 25,
+              GestureDetector(
+                onTap: () => _shareAppLink(context),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+                  width: double.infinity,
+                  height: 65,
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.purple[50],
+                        foregroundColor: Colors.purple,
+                        radius: 25,
+                        child: const Icon(
+                          EneftyIcons.share_outline,
+                          size: 25,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Share",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Share",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "Share this app with others.",
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Color(0xFF676767),
+                          Text(
+                            "Share this app with others.",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF676767),
+                            ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
               vSpace(height: 0.01),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
-                width: double.infinity,
-                height: 65,
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.teal[50],
-                      foregroundColor: Colors.teal,
-                      radius: 25,
-                      child: const Icon(
-                        EneftyIcons.info_circle_outline,
-                        size: 25,
+              GestureDetector(
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AboutPage())),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+                  width: double.infinity,
+                  height: 65,
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.teal[50],
+                        foregroundColor: Colors.teal,
+                        radius: 25,
+                        child: const Icon(
+                          EneftyIcons.info_circle_outline,
+                          size: 25,
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "About",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "About",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        Text(
-                          "Learn about the app",
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Color(0xFF676767),
+                          Text(
+                            "Learn about the app",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF676767),
+                            ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
               vSpace(height: 0.01),

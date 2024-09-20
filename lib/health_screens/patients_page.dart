@@ -1,3 +1,4 @@
+import 'package:abtms/health_screens/patients/patient_details.dart';
 import 'package:abtms/widgets/my_widgets.dart';
 import 'package:abtms/health_screens/patients/patient_history.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -107,10 +108,19 @@ class _PatientsPageState extends State<PatientsPage> {
       child: TextField(
         controller: _searchController,
         decoration: InputDecoration(
+          fillColor: const Color.fromARGB(255, 243, 245, 255),
+          filled: true,
           hintText: 'Search patients...',
-          prefixIcon: Icon(Icons.search),
+          hintStyle: TextStyle(
+            color: Color(0xFF343F9B),
+          ),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Color(0xFF343F9B),
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(50),
+            borderSide: BorderSide.none,
           ),
           contentPadding: EdgeInsets.all(10),
         ),
@@ -181,7 +191,7 @@ class _PatientsPageState extends State<PatientsPage> {
         decoration: BoxDecoration(
           border: Border.all(
             width: 1,
-            color: const Color.fromRGBO(224, 224, 224, 1),
+            color: const Color.fromARGB(255, 243, 245, 255),
           ),
           borderRadius: BorderRadius.circular(30),
         ),
@@ -238,10 +248,11 @@ class _PatientsPageState extends State<PatientsPage> {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
+                      backgroundColor: Color(0xFF343F9B),
+                      foregroundColor: const Color.fromARGB(255, 243, 245, 255),
                     ),
-                    onPressed: () {},
+                    onPressed: () => _navigateToPatientDetails(
+                        patientData), // Call navigation function
                     child: Text("Details"),
                   ),
                 ),
@@ -281,10 +292,11 @@ class _PatientsPageState extends State<PatientsPage> {
 
   Widget _buildDefaultAvatar() {
     return CircleAvatar(
+      backgroundColor: const Color.fromARGB(255, 243, 245, 255),
+      foregroundColor: const Color(0xFF343F9B),
       child: Icon(
         EneftyIcons.user_outline,
-        size: 50.0,
-        color: Color(0xFF3E4D99),
+        size: 40.0,
       ),
     );
   }
@@ -293,7 +305,18 @@ class _PatientsPageState extends State<PatientsPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PatientHistoryPage(patientData: patientData),
+        builder: (context) => PatientHistoryPage(
+          patientData: patientData,
+        ),
+      ),
+    );
+  }
+
+  void _navigateToPatientDetails(Map<String, dynamic> patientData) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PatientDetailsPage(patientData: patientData),
       ),
     );
   }

@@ -25,11 +25,12 @@ class _HealthProviderWrapperState extends State<HealthProviderWrapper> {
       body: screens[index],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey[500],
+        unselectedItemColor: Colors.grey[600],
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
         currentIndex: index,
         onTap: (index) => setState(() => this.index = index),
-        items: [
-          const BottomNavigationBarItem(
+        items: const [
+          BottomNavigationBarItem(
             icon: Icon(
               Icons.people_alt_outlined,
             ),
@@ -39,7 +40,7 @@ class _HealthProviderWrapperState extends State<HealthProviderWrapper> {
               // color: Color(0xFF3E4D99),
             ),
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(
               Icons.notifications,
             ),
@@ -49,7 +50,7 @@ class _HealthProviderWrapperState extends State<HealthProviderWrapper> {
               // color: Color(0xFF3E4D99),
             ),
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(
               Icons.settings_outlined,
             ),
