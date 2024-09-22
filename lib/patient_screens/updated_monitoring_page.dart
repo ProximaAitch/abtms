@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:abtms/patient_screens/main_patient_wrapper.dart';
 import 'package:abtms/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
@@ -24,6 +22,74 @@ class UpdatedMonitoringPage extends StatefulWidget {
 class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
   BluetoothConnection? _connection;
 
+  String heartrate = "0";
+  String temp = "0";
+  String spo2 = "0";
+  bool isMeasuring = false;
+
+  String getHeartRateStatus(String heartrate) {
+    int hr = int.parse(heartrate);
+    if (hr < 60) {
+      return 'Low';
+    } else if (hr > 100) {
+      return 'High';
+    } else {
+      return 'Normal';
+    }
+  }
+
+  Color getHeartRateColor(String heartrate) {
+    int hr = int.parse(heartrate);
+    if (hr < 60) {
+      return Colors.red;
+    } else if (hr > 100) {
+      return Colors.orange;
+    } else {
+      return Colors.green;
+    }
+  }
+
+  String getSpo2Status(String spo2) {
+    int sp = int.parse(spo2);
+    if (sp < 95) {
+      return 'Low';
+    } else {
+      return 'Normal';
+    }
+  }
+
+  Color getSpo2Color(String spo2) {
+    int sp = int.parse(spo2);
+    if (sp < 95) {
+      return Colors.red;
+    } else {
+      return Colors.green;
+    }
+  }
+
+  String getTempStatus(String temp) {
+    double temperature = double.parse(temp);
+    if (temperature < 36.0) {
+      return 'Low';
+    } else if (temperature > 37.5) {
+      return 'High';
+    } else {
+      return 'Normal';
+    }
+  }
+
+  Color getTempColor(String temp) {
+    double temperature = double.parse(temp);
+    if (temperature < 36.0) {
+      return Colors.blue;
+    } else if (temperature > 37.5) {
+      return Colors.red;
+    } else {
+      return Colors.green;
+    }
+  }
+
+  @override
   void initState() {
     super.initState();
     _startListening();
@@ -31,22 +97,63 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
 
   void _startListening() {
     widget.connection.input?.listen((data) {
-      // Handle incoming data
       String incomingMessage = ascii.decode(data);
       print('Data incoming: $incomingMessage');
-      // TODO: Parse the incoming message and update the UI
+      _parseIncomingData(incomingMessage);
     })?.onDone(() {
-      // Handle connection lost
       print('Disconnected by remote request');
       _handleDisconnect();
     });
+  }
+
+  String _buffer = '';
+
+  void _parseIncomingData(String data) {
+    _buffer += data; // Add incoming data to the buffer
+
+    if (_buffer.contains('\n')) {
+      List<String> measurements = _buffer.split('\n');
+
+      // Process all complete lines of data
+      for (int i = 0; i < measurements.length - 1; i++) {
+        _processMeasurement(measurements[i].trim());
+      }
+
+      // Keep the last (possibly incomplete) part in the buffer
+      _buffer = measurements.last;
+    }
+  }
+
+  void _processMeasurement(String measurement) {
+    if (measurement.contains('BPM:')) {
+      setState(() {
+        heartrate = measurement.split(':')[1].trim();
+      });
+    } else if (measurement.contains('SPO2:')) {
+      setState(() {
+        spo2 = measurement.split(':')[1].trim();
+      });
+    } else if (measurement.contains('Temp:')) {
+      setState(() {
+        // Extract the temperature value, convert to double, then format to integer
+        double temperatureValue =
+            double.parse(measurement.split(':')[1].trim());
+        int formattedTemp =
+            temperatureValue.toInt(); // Keep only the main value
+        temp = formattedTemp.toString(); // Convert back to string for display
+      });
+    } else if (measurement.contains('Measurement complete')) {
+      setState(() {
+        isMeasuring = false;
+      });
+    }
   }
 
   void _handleDisconnect() {
     widget.onDisconnect(); // Call the callback to update the parent state
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Device disconnected')),
+        const SnackBar(content: Text('Device disconnected')),
       );
     }
   }
@@ -56,6 +163,14 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
       widget.connection.output.add(utf8.encode(message + "\r\n"));
       await widget.connection.output.allSent;
       print('Message sent: $message');
+      if (message == 'measure') {
+        setState(() {
+          isMeasuring = true;
+          heartrate = "0";
+          spo2 = "0";
+          temp = "0";
+        });
+      }
     } catch (e) {
       print('Error sending message: $e');
       if (mounted) {
@@ -87,12 +202,6 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
     super.dispose();
   }
 
-  String heartrate = "00";
-
-  String temp = "00";
-
-  String spo2 = "00";
-
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -112,7 +221,7 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
             children: [
               Container(
                 width: double.infinity,
-                height: screenHeight * 0.24,
+                height: screenHeight * 0.27,
                 padding: EdgeInsets.all(screenHeight * 0.004),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
@@ -199,76 +308,83 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
                 children: [
                   Container(
                     width: screenWidth * 0.435,
-                    height: screenHeight * 0.22,
+                    height: screenHeight * 0.25,
                     padding: EdgeInsets.all(screenHeight * 0.004),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.grey[300],
                     ),
                     child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          color: Colors.white,
-                          image: const DecorationImage(
-                            image: AssetImage(
-                              "assets/images/heart rate bg.png",
-                            ),
-                            fit: BoxFit.cover,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(18),
+                        color: Colors.white,
+                        image: const DecorationImage(
+                          image: AssetImage(
+                            "assets/images/heart rate bg.png",
                           ),
+                          fit: BoxFit.cover,
                         ),
-                        padding: EdgeInsets.all(screenWidth * 0.03),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Image.asset(
-                              "assets/icons/heart-attack.png",
-                              height: screenHeight * 0.035,
-                              width: screenHeight * 0.035,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline
-                                  .alphabetic, // Required for baseline alignment
-                              children: [
-                                Text(
-                                  heartrate as String,
-                                  style: TextStyle(
-                                    fontSize: screenHeight * 0.065,
-                                    // Ensure the same TextBaseline is used
-                                    textBaseline: TextBaseline.alphabetic,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                      ),
+                      padding: EdgeInsets.all(screenWidth * 0.03),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Image.asset(
+                            "assets/icons/heart-attack.png",
+                            height: screenHeight * 0.035,
+                            width: screenHeight * 0.035,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline
+                                .alphabetic, // Required for baseline alignment
+                            children: [
+                              Text(
+                                heartrate,
+                                style: TextStyle(
+                                  fontSize: screenHeight * 0.06,
+                                  // Ensure the same TextBaseline is used
+                                  textBaseline: TextBaseline.alphabetic,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                SizedBox(
-                                  width: screenWidth * 0.003,
-                                ),
-                                Text(
-                                  "bpm",
-                                  style: TextStyle(
-                                    fontSize: screenHeight *
-                                        0.022, // Adjust this based on desired size
-                                    color: Colors.red,
-                                    textBaseline: TextBaseline
-                                        .alphabetic, // Align to the same baseline
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Text(
-                              "Heart Rate",
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.w600,
                               ),
-                            )
-                          ],
-                        )),
+                              SizedBox(
+                                width: screenWidth * 0.003,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Text(
+                                "Heart Rate",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                "(bpm)",
+                                style: TextStyle(
+                                  fontSize: screenHeight *
+                                      0.02, // Adjust this based on desired size
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  textBaseline: TextBaseline
+                                      .alphabetic, // Align to the same baseline
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
                   ),
                   Container(
                     width: screenWidth * 0.435,
-                    height: screenHeight * 0.22,
+                    height: screenHeight * 0.25,
                     padding: EdgeInsets.all(screenHeight * 0.004),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
@@ -296,29 +412,31 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
                             height: screenHeight * 0.035,
                             width: screenHeight * 0.035,
                           ),
+                          Text(
+                            temp,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: screenHeight * 0.06,
+                              color: Colors.white,
+                              textBaseline: TextBaseline.alphabetic,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline
-                                .alphabetic, // Required for baseline alignment
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(
-                                temp as String,
+                              const Text(
+                                "Temperature",
                                 style: TextStyle(
-                                  fontSize: screenHeight * 0.065,
-                                  color: Colors.white,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF91CEFF),
+                                  fontWeight: FontWeight.w600,
                                 ),
-                              ),
-                              SizedBox(
-                                width: screenWidth * 0.003,
                               ),
                               Text(
                                 "°C",
                                 style: TextStyle(
                                   fontSize: screenHeight *
-                                      0.03, // Adjust this based on desired size
+                                      0.025, // Adjust this based on desired size
                                   color: const Color(0xFF91CEFF),
                                   textBaseline: TextBaseline
                                       .alphabetic, // Align to the same baseline
@@ -326,13 +444,6 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
                                 ),
                               ),
                             ],
-                          ),
-                          const Text(
-                            "Temperature",
-                            style: TextStyle(
-                              color: Color(0xFF91CEFF),
-                              fontWeight: FontWeight.w600,
-                            ),
                           )
                         ],
                       ),
@@ -342,9 +453,7 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
               ),
               Container(
                 width: double.infinity,
-                //height: screenHeight * 0.2,
                 padding: EdgeInsets.all(screenHeight * 0.004),
-                // color: Colors.blue,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.grey[300],
@@ -356,67 +465,58 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
                     color: Colors.white,
                   ),
                   padding: EdgeInsets.symmetric(
-                      horizontal: screenHeight * 0.02,
-                      vertical: screenHeight * 0.01),
+                    horizontal: screenHeight * 0.02,
+                    vertical: screenHeight * 0.01,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Row(
+                      Row(
                         children: [
-                          Text(
+                          const Text(
                             "Heart Rate = ",
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            "Normal",
+                            getHeartRateStatus(heartrate),
                             style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.green),
+                              fontWeight: FontWeight.w600,
+                              color: getHeartRateColor(heartrate),
+                            ),
                           ),
                         ],
                       ),
-                      const Row(
+                      Row(
                         children: [
-                          Text(
+                          const Text(
                             "Blood Oxidation Level = ",
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            "Normal",
+                            getSpo2Status(spo2),
                             style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.green),
+                              fontWeight: FontWeight.w600,
+                              color: getSpo2Color(spo2),
+                            ),
                           ),
                         ],
                       ),
-                      const Row(
+                      Row(
                         children: [
-                          Text(
+                          const Text(
                             "Temperature = ",
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            "Normal",
+                            getTempStatus(temp),
                             style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.green),
+                              fontWeight: FontWeight.w600,
+                              color: getTempColor(temp),
+                            ),
                           ),
                         ],
                       ),
-                      Center(
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              foregroundColor: Colors.white,
-                            ),
-                            child: const Text("More Info"),
-                            onPressed: () {},
-                          ),
-                        ),
-                      )
                     ],
                   ),
                 ),
@@ -432,8 +532,9 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
                         backgroundColor: Colors.blue,
                         foregroundColor: Colors.white,
                       ),
-                      onPressed: () => _sendMessage("measure"),
-                      child: const Text("Measure"),
+                      onPressed:
+                          isMeasuring ? null : () => _sendMessage("measure"),
+                      child: Text(isMeasuring ? "Measuring..." : "Measure"),
                     ),
                   ),
                   SizedBox(

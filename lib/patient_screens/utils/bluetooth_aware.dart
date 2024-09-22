@@ -39,16 +39,16 @@ class _BluetoothAwareMonitoringPageState
   }
 
   Future<void> _requestPermissions() async {
-  if (await Permission.bluetooth.isDenied) {
-    await Permission.bluetooth.request();
+    if (await Permission.bluetooth.isDenied) {
+      await Permission.bluetooth.request();
+    }
+    if (await Permission.bluetoothScan.isDenied) {
+      await Permission.bluetoothScan.request();
+    }
+    if (await Permission.bluetoothConnect.isDenied) {
+      await Permission.bluetoothConnect.request();
+    }
   }
-  if (await Permission.bluetoothScan.isDenied) {
-    await Permission.bluetoothScan.request();
-  }
-  if (await Permission.bluetoothConnect.isDenied) {
-    await Permission.bluetoothConnect.request();
-  }
-}
 
   Future<void> _initializeBluetooth() async {
     await _getBleState();
@@ -99,7 +99,7 @@ class _BluetoothAwareMonitoringPageState
       print("Paired devices: ${devices.length}");
       setState(() => _devicesList = devices);
     } catch (e) {
-      print("Error getting paired devices: $e");
+      print("Error getting paired devices");
     }
   }
 
@@ -175,20 +175,24 @@ class _BluetoothAwareMonitoringPageState
 
       // Instead of navigating, we'll update the state to show the UpdatedMonitoringPage
       setState(() {});
-
     } catch (e) {
-      print('Error connecting to device: $e');
+      print(
+          'Error connecting to device\nPlease try turning your Bluetooth device off and on, then reconnect.');
       setState(() {
         _isConnecting = false;
       });
       widget.onConnectionChanged(false);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.red,
-        content: Text('Failed to connect: $e'),
-      ));
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+                'Failed to connect. Please try turning your Bluetooth device off and on, then reconnect.'),
+          ));
+        }
+      });
     }
   }
-
 
   void _handleDisconnect() {
     setState(() {
@@ -203,8 +207,7 @@ class _BluetoothAwareMonitoringPageState
     setState(() {});
   }
 
-
- @override
+  @override
   Widget build(BuildContext context) {
     super.build(context);
 

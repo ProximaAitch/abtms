@@ -32,12 +32,12 @@ class AboutPage extends StatelessWidget {
                       height: 100,
                       width: 100,
                       padding: const EdgeInsets.all(20),
-                      child: Image.asset(
-                          "assets/images/logo/purple_heart-removebg-preview.png"),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Color.fromARGB(255, 233, 236, 255),
+                        color: const Color.fromARGB(255, 233, 236, 255),
                       ),
+                      child: Image.asset(
+                          "assets/images/logo/purple_heart-removebg-preview.png"),
                     ),
                   ),
                   const SizedBox(
@@ -86,7 +86,7 @@ class AboutPage extends StatelessWidget {
                           width: 10,
                         ),
                         Text(
-                          "emmanuelanokye1@gmail.com /\neaddoasare1@gmail.com",
+                          "emmanuelanokye1@gmail.com\neaddoasare1@gmail.com",
                           style: TextStyle(fontSize: 15),
                         )
                       ],
@@ -101,7 +101,7 @@ class AboutPage extends StatelessWidget {
                           width: 10,
                         ),
                         Text(
-                          "0500860320 /\n0591693468",
+                          "0500860320 / 0591693468",
                           style: TextStyle(fontSize: 15),
                         ),
                       ],
@@ -124,7 +124,7 @@ class AboutPage extends StatelessWidget {
                   ],
                 ),
               ),
-              Column(
+              const Column(
                 children: [
                   Text(
                     "Developed by:",
@@ -143,7 +143,7 @@ class AboutPage extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(
+              const Text(
                 "version 1.0.0",
                 style:
                     TextStyle(fontWeight: FontWeight.w600, color: Colors.grey),
