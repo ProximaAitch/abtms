@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:abtms/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
@@ -125,29 +126,62 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
   }
 
   void _processMeasurement(String measurement) {
+    Map<String, String> updates = {};
+
     if (measurement.contains('BPM:')) {
-      setState(() {
-        heartrate = measurement.split(':')[1].trim();
-      });
+      String value = measurement.split(':')[1].trim();
+      updates['heartrate'] = value == '-999' ? '0' : value;
     } else if (measurement.contains('SPO2:')) {
-      setState(() {
-        spo2 = measurement.split(':')[1].trim();
-      });
+      String value = measurement.split(':')[1].trim();
+      updates['spo2'] = value == '-999' ? '0' : value;
     } else if (measurement.contains('Temp:')) {
+      String value = measurement.split(':')[1].trim();
+      if (value == '-127.00') {
+        updates['temp'] = '0';
+      } else {
+        double temperatureValue = double.parse(value);
+        updates['temp'] = temperatureValue.toInt().toString();
+      }
+    }
+
+    if (updates.isNotEmpty) {
       setState(() {
-        // Extract the temperature value, convert to double, then format to integer
-        double temperatureValue =
-            double.parse(measurement.split(':')[1].trim());
-        int formattedTemp =
-            temperatureValue.toInt(); // Keep only the main value
-        temp = formattedTemp.toString(); // Convert back to string for display
+        heartrate = updates['heartrate'] ?? heartrate;
+        spo2 = updates['spo2'] ?? spo2;
+        temp = updates['temp'] ?? temp;
       });
-    } else if (measurement.contains('Measurement complete')) {
+    }
+
+    if (measurement.contains('Measurement complete')) {
       setState(() {
         isMeasuring = false;
       });
     }
   }
+  // void _processMeasurement(String measurement) {
+  //   if (measurement.contains('BPM:')) {
+  //     setState(() {
+  //       heartrate = measurement.split(':')[1].trim();
+  //     });
+  //   } else if (measurement.contains('SPO2:')) {
+  //     setState(() {
+  //       spo2 = measurement.split(':')[1].trim();
+  //     });
+  //   } else if (measurement.contains('Temp:')) {
+  //     setState(() {
+  //       // Extract the temperature value, convert to double, then format to integer
+  //       double temperatureValue =
+  //           double.parse(measurement.split(':')[1].trim());
+  //       int formattedTemp =
+  //           temperatureValue.toInt(); // Keep only the main value
+  //       temp = formattedTemp.toString(); // Convert back to string for display
+  //     });
+  //   } else if (measurement.contains('Measurement complete')) {
+  //     setState(() {
+  //       isMeasuring = false;
+  //     });
+  //   }
+  // }
 
   void _handleDisconnect() {
     widget.onDisconnect(); // Call the callback to update the parent state
@@ -246,9 +280,10 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
                       Center(
                         child: CircularPercentIndicator(
                           radius: screenHeight * 0.1,
-                          percent: int.parse(spo2) / 100.0,
+                          percent: spo2 == '0' ? 0 : int.parse(spo2) / 100.0,
                           lineWidth: 7,
-                          progressColor: Colors.white,
+                          progressColor:
+                              spo2 == '0' ? Colors.red : Colors.white,
                           backgroundColor: Colors.transparent,
                           circularStrokeCap: CircularStrokeCap.round,
                           center: Column(
@@ -342,10 +377,12 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
                                 .alphabetic, // Required for baseline alignment
                             children: [
                               Text(
-                                heartrate,
+                                heartrate == '0' ? '0' : heartrate,
                                 style: TextStyle(
                                   fontSize: screenHeight * 0.06,
-                                  // Ensure the same TextBaseline is used
+                                  color: heartrate == '0'
+                                      ? Colors.red
+                                      : Colors.black,
                                   textBaseline: TextBaseline.alphabetic,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -479,10 +516,14 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            getHeartRateStatus(heartrate),
+                            heartrate == '0'
+                                ? 'No readings Recorded'
+                                : getHeartRateStatus(heartrate),
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: getHeartRateColor(heartrate),
+                              color: heartrate == '0'
+                                  ? Colors.grey[600]
+                                  : getHeartRateColor(heartrate),
                             ),
                           ),
                         ],
@@ -490,14 +531,18 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
                       Row(
                         children: [
                           const Text(
-                            "Blood Oxidation Level = ",
+                            "Blood Oxidation = ",
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            getSpo2Status(spo2),
+                            spo2 == '0'
+                                ? 'No Readings Recorded'
+                                : getSpo2Status(spo2),
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: getSpo2Color(spo2),
+                              color: spo2 == '0'
+                                  ? Colors.grey[600]
+                                  : getSpo2Color(spo2),
                             ),
                           ),
                         ],
@@ -509,10 +554,14 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            getTempStatus(temp),
+                            temp == '0'
+                                ? 'No Readings Recorded'
+                                : getTempStatus(temp),
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: getTempColor(temp),
+                              color: temp == '0'
+                                  ? Colors.grey[600]
+                                  : getTempColor(temp),
                             ),
                           ),
                         ],
