@@ -1,9 +1,6 @@
 import 'package:abtms/get_started/email_verification.dart';
 import 'package:abtms/get_started/login.dart';
-import 'package:abtms/health_screens/main_provider_widget.dart';
-import 'package:abtms/patient_screens/main_patient_wrapper.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:abtms/widgets/my_widgets.dart';

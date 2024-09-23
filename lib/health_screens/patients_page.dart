@@ -183,7 +183,9 @@ class _PatientsPageState extends State<PatientsPage> {
     Widget profileImageWidget = _buildProfileImage(patientData);
 
     return GestureDetector(
-      onTap: () => _navigateToPatientHistory(patientData),
+      onTap: () => _navigateToPatientDetails(
+          patient), // Pass the patient document snapshot
+
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(16),
@@ -252,7 +254,8 @@ class _PatientsPageState extends State<PatientsPage> {
                       foregroundColor: const Color.fromARGB(255, 243, 245, 255),
                     ),
                     onPressed: () => _navigateToPatientDetails(
-                        patientData), // Call navigation function
+                        patient), // Pass the patient document snapshot
+
                     child: Text("Details"),
                   ),
                 ),
@@ -263,7 +266,9 @@ class _PatientsPageState extends State<PatientsPage> {
                       backgroundColor: Colors.black,
                       foregroundColor: Colors.white,
                     ),
-                    onPressed: () => _navigateToPatientHistory(patientData),
+                    onPressed: () => _navigateToPatientHistory(
+                        patient), // Pass the patient document snapshot
+
                     child: Text("History"),
                   ),
                 ),
@@ -301,22 +306,28 @@ class _PatientsPageState extends State<PatientsPage> {
     );
   }
 
-  void _navigateToPatientHistory(Map<String, dynamic> patientData) {
+  void _navigateToPatientHistory(DocumentSnapshot patient) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => PatientHistoryPage(
-          patientData: patientData,
+          patientId: patient.id, // Pass the patient document ID
+          patientData:
+              patient.data() as Map<String, dynamic>, // Pass the patient data
         ),
       ),
     );
   }
 
-  void _navigateToPatientDetails(Map<String, dynamic> patientData) {
+  void _navigateToPatientDetails(DocumentSnapshot patient) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PatientDetailsPage(patientData: patientData),
+        builder: (context) => PatientDetailsPage(
+          patientId: patient.id, // Pass the patient document ID
+          patientData:
+              patient.data() as Map<String, dynamic>, // Pass the patient data
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_generative_ai/google_generative_ai.dart' as gpt;
 import 'package:flutter_html/flutter_html.dart';
 
@@ -102,7 +103,13 @@ class _HealthTipDetailPageState extends State<HealthTipDetailPage> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
+                          return const Padding(
+                            padding: EdgeInsets.only(top: 20.0),
+                            child: SpinKitThreeBounce(
+                              size: 20,
+                              color: Color(0xFF343F9B),
+                            ),
+                          );
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {

@@ -3,6 +3,7 @@ import 'package:abtms/patient_screens/updated_monitoring_page.dart';
 import 'package:abtms/widgets/my_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class BluetoothAwareMonitoringPage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _BluetoothAwareMonitoringPageState
   int _retryCount = 0;
   static const int _maxRetries = 3;
   BluetoothConnection? connection;
-  BluetoothConnection? _connection;
+  static const String TARGET_DEVICE_NAME = "ABTMS-Bluetooth";
 
   @override
   bool get wantKeepAlive => true;
@@ -39,18 +40,13 @@ class _BluetoothAwareMonitoringPageState
   }
 
   Future<void> _requestPermissions() async {
-    if (await Permission.bluetooth.isDenied) {
-      await Permission.bluetooth.request();
-    }
-    if (await Permission.bluetoothScan.isDenied) {
-      await Permission.bluetoothScan.request();
-    }
-    if (await Permission.bluetoothConnect.isDenied) {
-      await Permission.bluetoothConnect.request();
-    }
+    await Permission.bluetooth.request();
+    await Permission.bluetoothScan.request();
+    await Permission.bluetoothConnect.request();
   }
 
   Future<void> _initializeBluetooth() async {
+    await _requestPermissions();
     await _getBleState();
     _listenForBluetoothStateChanges();
   }
@@ -99,7 +95,7 @@ class _BluetoothAwareMonitoringPageState
       print("Paired devices: ${devices.length}");
       setState(() => _devicesList = devices);
     } catch (e) {
-      print("Error getting paired devices");
+      print("Error getting paired devices: $e");
     }
   }
 
@@ -119,7 +115,7 @@ class _BluetoothAwareMonitoringPageState
             TextButton(
               child: Text('Turn On', style: TextStyle(color: Colors.blue[600])),
               onPressed: () async {
-                await FlutterBluetoothSerial.instance.openSettings();
+                await FlutterBluetoothSerial.instance.requestEnable();
                 Navigator.of(context).pop();
               },
             ),
@@ -129,75 +125,75 @@ class _BluetoothAwareMonitoringPageState
     );
   }
 
-  void _showDeviceSelectionDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select a device'),
-          content: SizedBox(
-            height: 300,
-            width: double.maxFinite,
-            child: ListView.builder(
-              itemCount: _devicesList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(_devicesList[index].name ?? "Unknown device"),
-                  subtitle: Text(_devicesList[index].address),
-                  onTap: () {
-                    _connectToDevice(_devicesList[index]);
-                    Navigator.of(context).pop();
-                  },
-                );
-              },
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _connectToDevice(BluetoothDevice device) async {
+  Future<void> _connectToTargetDevice() async {
     setState(() {
       _isConnecting = true;
     });
 
     try {
-      connection = await BluetoothConnection.toAddress(device.address)
-          .timeout(Duration(seconds: 60));
+      // Check if already connected to the target device
+      if (_connectedDevice?.name == TARGET_DEVICE_NAME && connection != null) {
+        setState(() {
+          _isConnecting = false;
+        });
+        return;
+      }
+
+      // Search for the target device
+      BluetoothDevice? targetDevice =
+          _devicesList.cast<BluetoothDevice?>().firstWhere(
+                (device) => device?.name == TARGET_DEVICE_NAME,
+                orElse: () => null,
+              );
+
+      if (targetDevice == null) {
+        throw Exception("Target device not found");
+      }
+
+      connection = await BluetoothConnection.toAddress(targetDevice.address)
+          .timeout(Duration(seconds: 30));
 
       setState(() {
-        _connectedDevice = device;
+        _connectedDevice = targetDevice;
         _isConnecting = false;
       });
 
       widget.onConnectionChanged(true);
 
-      // Instead of navigating, we'll update the state to show the UpdatedMonitoringPage
+      // Update the state to show the UpdatedMonitoringPage
       setState(() {});
     } catch (e) {
-      print(
-          'Error connecting to device\nPlease try turning your Bluetooth device off and on, then reconnect.');
+      print('Error connecting to device: $e');
       setState(() {
         _isConnecting = false;
       });
       widget.onConnectionChanged(false);
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: Colors.red,
-            content: Text(
-                'Failed to connect. Please try turning your Bluetooth device off and on, then reconnect.'),
-          ));
-        }
-      });
+      _showConnectionErrorSnackBar();
     }
+  }
+
+  void _showConnectionErrorSnackBar() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+              'Failed to connect to $TARGET_DEVICE_NAME. Please ensure the device is turned on and in range.'),
+          duration: Duration(seconds: 5),
+          action: SnackBarAction(
+            label: 'Retry',
+            onPressed: _connectToTargetDevice,
+          ),
+        ));
+      }
+    });
   }
 
   void _handleDisconnect() {
     setState(() {
       _connectedDevice = null;
-      _connection = null;
+      connection?.dispose();
+      connection = null;
     });
     _checkBluetoothState();
   }
@@ -214,7 +210,10 @@ class _BluetoothAwareMonitoringPageState
     if (_isLoading) {
       return Scaffold(
         body: Center(
-          child: CircularProgressIndicator(),
+          child: SpinKitThreeBounce(
+            size: 20,
+            color: Color(0xFF343F9B),
+          ),
         ),
       );
     }
@@ -226,7 +225,7 @@ class _BluetoothAwareMonitoringPageState
 
     if (_connectedDevice == null) {
       return DeviceNotConnected(
-        onConnectPressed: _showDeviceSelectionDialog,
+        onConnectPressed: _connectToTargetDevice,
         isPaired: _devicesList.isNotEmpty,
         isConnecting: _isConnecting,
       );
@@ -329,23 +328,31 @@ class DeviceNotConnected extends StatelessWidget {
               SizedBox(height: 10),
               Text(
                 isPaired
-                    ? 'Tap on the connect button to connect to device'
-                    : 'Pair a device in your Bluetooth settings',
+                    ? 'Tap on the connect button to connect to ABTMS-Bluetooth Device'
+                    : 'Pair ABTMS-Bluetooth in your Bluetooth settings',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, color: Colors.grey[600]),
               ),
               SizedBox(height: 30),
               ElevatedButton.icon(
                 icon: Icon(isPaired ? Icons.bluetooth_connected : Icons.add),
-                label: Text(isPaired ? "Connect" : "Pair a device"),
+                label: Text(isPaired ? "Connect" : "Pair ABTMS-Bluetooth"),
                 style: ElevatedButton.styleFrom(
                   elevation: 5,
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 ),
-                onPressed: onConnectPressed,
+                onPressed: isConnecting ? null : onConnectPressed,
               ),
+              if (isConnecting)
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: SpinKitThreeBounce(
+                    size: 20,
+                    color: Color(0xFF343F9B),
+                  ),
+                ),
             ],
           ),
         ),

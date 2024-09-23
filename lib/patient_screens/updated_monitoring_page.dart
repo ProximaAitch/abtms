@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:abtms/widgets/my_widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -156,32 +158,32 @@ class _UpdatedMonitoringPageState extends State<UpdatedMonitoringPage> {
       setState(() {
         isMeasuring = false;
       });
+      _saveMeasurementToDatabase();
     }
   }
-  // void _processMeasurement(String measurement) {
-  //   if (measurement.contains('BPM:')) {
-  //     setState(() {
-  //       heartrate = measurement.split(':')[1].trim();
-  //     });
-  //   } else if (measurement.contains('SPO2:')) {
-  //     setState(() {
-  //       spo2 = measurement.split(':')[1].trim();
-  //     });
-  //   } else if (measurement.contains('Temp:')) {
-  //     setState(() {
-  //       // Extract the temperature value, convert to double, then format to integer
-  //       double temperatureValue =
-  //           double.parse(measurement.split(':')[1].trim());
-  //       int formattedTemp =
-  //           temperatureValue.toInt(); // Keep only the main value
-  //       temp = formattedTemp.toString(); // Convert back to string for display
-  //     });
-  //   } else if (measurement.contains('Measurement complete')) {
-  //     setState(() {
-  //       isMeasuring = false;
-  //     });
-  //   }
-  // }
+
+  void _saveMeasurementToDatabase() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance
+            .collection('patients')
+            .doc(user.uid)
+            .collection('measurements')
+            .add({
+          'heartrate': heartrate,
+          'spo2': spo2,
+          'temperature': temp,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+        print('Measurement saved to database');
+      } else {
+        print('User not authenticated');
+      }
+    } catch (e) {
+      print('Error saving measurement to database: $e');
+    }
+  }
 
   void _handleDisconnect() {
     widget.onDisconnect(); // Call the callback to update the parent state

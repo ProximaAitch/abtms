@@ -5,10 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class PatientDetailsPage extends StatelessWidget {
+  final String patientId;  // Ensure patientId is received properly
   final Map<String, dynamic> patientData;
 
-  const PatientDetailsPage({Key? key, required this.patientData})
-      : super(key: key);
+  const PatientDetailsPage({
+    Key? key,
+    required this.patientId,  // Mark this as required
+    required this.patientData,
+  }) : super(key: key);
 
   Future<void> _makePhoneCall(String phoneNumber) async {
     final Uri launchUri = Uri(
@@ -47,8 +51,7 @@ class PatientDetailsPage extends StatelessWidget {
                     Center(
                       child: CircleAvatar(
                         radius: 60,
-                        backgroundColor:
-                            const Color.fromARGB(255, 243, 245, 255),
+                        backgroundColor: const Color.fromARGB(255, 243, 245, 255),
                         backgroundImage: patientData['profileImage'] != null &&
                                 patientData['profileImage'].isNotEmpty
                             ? NetworkImage(patientData['profileImage'])
@@ -71,9 +74,7 @@ class PatientDetailsPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 15,
-                ),
+                const SizedBox(height: 15),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
@@ -172,9 +173,7 @@ class PatientDetailsPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 15,
-                ),
+                const SizedBox(height: 15),
                 SizedBox(
                   height: 50,
                   width: double.infinity,
@@ -182,14 +181,18 @@ class PatientDetailsPage extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                         foregroundColor: Colors.white),
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PatientHistoryPage(
-                          patientData: patientData,
+                    onPressed: () {
+                      // Navigate to PatientHistoryPage and pass the patientId and patientData
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PatientHistoryPage(
+                            patientId: patientId, // Pass the patient document ID
+                            patientData: patientData, // Pass the patient data
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                     child: const Text("Patient History"),
                   ),
                 ),
